@@ -3,7 +3,7 @@ package com.example.justone.data
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface RemoteDateSource {
+interface GeneratorService {
 
     @GET("?")
     suspend fun getRandomWords(

@@ -1,35 +1,36 @@
 package com.example.justone.network
 
-import com.example.justone.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object TranslatorNetworkModule {
 
     @Provides
+    @Named("WordsTranslator")
     @Singleton
     fun provideRetrofit(
-        okHttpClient: OkHttpClient
+        @Named("WordsTranslator") okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://words-generator.p.rapidapi.com/")
+            .baseUrl("http://api.interpreter.caiyunai.com/v1/translator")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     @Provides
+    @Named( "WordsTranslator")
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
@@ -41,8 +42,8 @@ object NetworkModule {
             .writeTimeout(5_000L, TimeUnit.MILLISECONDS)
             .addInterceptor { chain ->
                 val builder = chain.request().newBuilder()
-                builder.header("X-RapidAPI-Host", "words-generator.p.rapidapi.com")
-                builder.header("X-RapidAPI-Key", BuildConfig.API_KEY)
+                builder.header("content-type", "application/json")
+                builder.header("x-authorization", "token " + "3975l6lr5pcbvidl6jl2")
                 return@addInterceptor chain.proceed(builder.build())
             }
             .addInterceptor(logging)
