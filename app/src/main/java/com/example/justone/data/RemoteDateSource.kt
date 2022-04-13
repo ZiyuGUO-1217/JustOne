@@ -10,6 +10,6 @@ interface RemoteDateSource {
         @Query("table") table: String,
         @Query("lang") language: String? = null,
         @Query("limit") limit: Int? = null,
-        @Query("random") isRandom: String? = null
+        @Query("random") random: String? = null
     ): WordGeneratorResponse
 }

@@ -12,26 +12,27 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class WordGeneratorViewModel @Inject constructor(
     private val repository: WordGeneratorRepository
-): BaseViewModel<WordGeneratorState, WordGeneratorAction>() {
-
-    init {
-        getRandomWords()
-    }
+) : BaseViewModel<WordGeneratorState, WordGeneratorAction>() {
+    private val wordsNumber: Int = 5
 
     override fun configureInitState(): WordGeneratorState {
-        return WordGeneratorState(words = emptyList())
+        return WordGeneratorState(words = emptyList(), wordsNumber = wordsNumber)
     }
 
     override fun dispatch(action: WordGeneratorAction) {
-        when (action) { }
+        when (action) {
+            WordGeneratorAction.GenerateWords -> getRandomWords()
+        }
     }
 
     private fun getRandomWords() {
+        updateState { copy(words = emptyList(), isLoading = true) }
         viewModelScope.launch {
-            repository.getRandomWordList()
+            repository.getRandomWordList(wordsNumber)
                 .onSuccess { wordList ->
                     updateState { copy(words = wordList) }
                 }
+            updateState { copy(isLoading = false) }
         }
     }
 }

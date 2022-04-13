@@ -1,3 +1,5 @@
 package com.example.justone.model
 
-sealed interface WordGeneratorAction
+sealed interface WordGeneratorAction {
+    object GenerateWords : WordGeneratorAction
+}

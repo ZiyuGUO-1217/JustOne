@@ -7,8 +7,13 @@ import javax.inject.Inject
 class WordGeneratorRepository @Inject constructor(
     private val remoteDateSource: RemoteDateSource
 ) {
-    suspend fun getRandomWordList(): ApiResult<List<String>> = callApi {
-        val wordsResponse = remoteDateSource.getRandomWords(table = "pictionary", language = "en", limit = 5, isRandom = "yes")
+    suspend fun getRandomWordList(wordsNumber: Int): ApiResult<List<String>> = callApi {
+        val wordsResponse = remoteDateSource.getRandomWords(
+            table = "pictionary",
+            language = "en",
+            limit = wordsNumber,
+            random = "yes"
+        )
         return ApiResult.Success(wordsResponse.data)
     }
 }
