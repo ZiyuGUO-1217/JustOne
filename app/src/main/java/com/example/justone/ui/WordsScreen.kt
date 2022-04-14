@@ -19,6 +19,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,7 +56,15 @@ private fun ScreenContent(
     actor: (action: WordGeneratorAction) -> Unit
 ) {
     val onGenerateClick = { actor(WordGeneratorAction.GenerateWords) }
-    val onWordClick = { }
+    var clickedWord by remember { mutableStateOf("") }
+    var dialogState by remember { mutableStateOf(DialogState.HIDE) }
+    val onWordClick: (String) -> Unit = {
+        dialogState = DialogState.WORD
+        clickedWord = it
+    }
+    val onClose = { dialogState = DialogState.HIDE }
+    val onConfirm = { dialogState = DialogState.COUNT_DOWN }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomGenerateButton(onGenerateClick) },
@@ -67,6 +78,7 @@ private fun ScreenContent(
             onWordClick = onWordClick
         )
     }
+    WordDialog(clickedWord, state.timer, dialogState, onClose, onConfirm)
 }
 
 @Composable
@@ -81,9 +93,9 @@ private fun BottomGenerateButton(onGenerateClick: () -> Unit) {
         Text(
             text = "GENERATE",
             modifier = Modifier
-                .padding(vertical = 24.dp)
+                .padding(vertical = 36.dp)
                 .fillMaxWidth(),
-            fontSize = 27.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color.White,
             textAlign = TextAlign.Center
@@ -97,7 +109,7 @@ fun WordList(
     words: List<String>,
     wordsNumber: Int,
     isLoading: Boolean,
-    onWordClick: () -> Unit
+    onWordClick: (String) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -116,15 +128,16 @@ fun WordList(
 private fun WordText(
     word: String,
     highlight: PlaceholderHighlight?,
-    onWordClick: () -> Unit
+    onWordClick: (String) -> Unit
 ) {
     val color = Secondary
     val shape = RoundedCornerShape(32.dp)
-    val modifier = if (word.isBlank()) Modifier.width(256.dp) else Modifier
+    val isWordNotReady = word.isBlank()
+    val modifier = if (isWordNotReady) Modifier.width(256.dp) else Modifier
 
     Card(
-        onClick = { onWordClick() },
-        modifier = modifier.placeholder(word.isBlank(), color, shape, highlight),
+        onClick = { if (isWordNotReady.not()) onWordClick(word) },
+        modifier = modifier.placeholder(isWordNotReady, color, shape, highlight),
         shape = shape,
         backgroundColor = color,
         elevation = 4.dp
@@ -132,9 +145,9 @@ private fun WordText(
         Text(
             text = word,
             modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
-            fontSize = 31.sp,
+            fontSize = 50.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = Color.Black,
             textAlign = TextAlign.Center,
             maxLines = 1
         )
@@ -147,6 +160,6 @@ fun WordsScreenPreview() {
     val words = listOf("Modifier", "Preview", "Composable", "Content", "background")
     val wordsNumber = words.size
     JustOneTheme {
-        ScreenContent(WordGeneratorState(emptyList(), wordsNumber)) {}
+        ScreenContent(WordGeneratorState(words, wordsNumber, 60)) {}
     }
 }
