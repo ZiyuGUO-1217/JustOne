@@ -63,7 +63,7 @@ private fun ScreenContent(
         clickedWord = it
     }
     val onClose = { dialogState = DialogState.HIDE }
-    val onConfirm = { dialogState = DialogState.COUNT_DOWN }
+    val onConfirm = { dialogState = DialogState.HINT_PREPARING }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,7 +78,10 @@ private fun ScreenContent(
             onWordClick = onWordClick
         )
     }
-    WordDialog(clickedWord, state.timer, dialogState, onClose, onConfirm)
+
+    if (dialogState != DialogState.HIDE) {
+        WordDialog(clickedWord, state.timer, dialogState, onClose, onConfirm)
+    }
 }
 
 @Composable

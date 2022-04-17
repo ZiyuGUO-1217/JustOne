@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,21 +19,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.dp
-import com.example.justone.ui.theme.Secondary
+import androidx.compose.ui.platform.LocalDensity
+import com.example.justone.ui.theme.Primary
 
-private const val TIMER_ANGLE = 359f
+private const val TIMER_ANGLE = 360f
 
 @Composable
-fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit) {
+fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit = {}) {
     val unitWidth = timerWidth / (10 + 2).toFloat()
     val radius = (unitWidth * 8) / 2
+    val canvasSize = with(LocalDensity.current) { timerWidth.toDp() }
 
     val animateArcFloat = remember { Animatable(1f) }
-    var countDownNumberColor by remember { mutableStateOf(Secondary) }
+    var countDownNumberColor by remember { mutableStateOf(Primary) }
 
     var countDownTimer by remember { mutableStateOf(timer) }
     val leftTime by animateIntAsState(
@@ -44,8 +47,8 @@ fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit)
         }
     )
 
-    Box(contentAlignment = Alignment.Center) {
-        Canvas(modifier = Modifier.size(width = timerWidth.dp, height = (timerWidth / 2).dp)) {
+    Box(modifier = Modifier.size(canvasSize), contentAlignment = Alignment.Center) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
             drawBackgroundRing(radius, unitWidth)
             drawForegroundArc(animateArcFloat, radius, unitWidth)
         }
@@ -70,7 +73,11 @@ private fun DrawScope.drawForegroundArc(
     unitWidth: Float
 ) {
     drawArc(
-        color = Secondary,
+        brush = Brush.sweepGradient(
+            0.0f to Color.Red,
+            0.4f to Color.Yellow,
+            1.0f to Color.Green
+        ),
         startAngle = TIMER_ANGLE,
         sweepAngle = TIMER_ANGLE * animateArcFloat.value,
         size = Size(radius * 2, radius * 2),
