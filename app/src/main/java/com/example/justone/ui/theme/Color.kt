@@ -14,3 +14,7 @@ val PrimaryDark = Color(0xFF00373e)
 val Secondary = Color(0xFFff9194)
 val SecondaryLight = Color(0xFFffc3c4)
 val SecondaryDark = Color(0xFFc96166)
+
+val Red400 = Color(0xFFEF5350)
+val Green400 = Color(0xFF66BB6A)
+val Yellow400 = Color(0xFFFFEE58)

@@ -24,7 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import com.example.justone.ui.theme.Green400
 import com.example.justone.ui.theme.Primary
+import com.example.justone.ui.theme.Red400
+import com.example.justone.ui.theme.Yellow400
 
 private const val TIMER_ANGLE = 360f
 
@@ -74,9 +77,9 @@ private fun DrawScope.drawForegroundArc(
 ) {
     drawArc(
         brush = Brush.sweepGradient(
-            0.0f to Color.Red,
-            0.4f to Color.Yellow,
-            1.0f to Color.Green
+            0.0f to Red400,
+            0.4f to Yellow400,
+            1.0f to Green400
         ),
         startAngle = TIMER_ANGLE,
         sweepAngle = TIMER_ANGLE * animateArcFloat.value,

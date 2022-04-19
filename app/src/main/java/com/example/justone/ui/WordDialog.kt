@@ -51,7 +51,7 @@ fun WordDialog(
 
             when (dialogState) {
                 DialogState.WORD -> WordShowing(word, onClose, onConfirm, topContentModifier, bottomContentModifier)
-                DialogState.HINT_PREPARING -> HintPreparing(dialogWidth, timer, bottomContentModifier)
+                DialogState.CLUE -> CluePreparing(dialogWidth, timer, bottomContentModifier)
             }
         }
     }

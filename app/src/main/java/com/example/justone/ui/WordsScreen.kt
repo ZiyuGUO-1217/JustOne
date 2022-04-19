@@ -63,7 +63,7 @@ private fun ScreenContent(
         clickedWord = it
     }
     val onClose = { dialogState = DialogState.HIDE }
-    val onConfirm = { dialogState = DialogState.HINT_PREPARING }
+    val onConfirm = { dialogState = DialogState.CLUE }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
