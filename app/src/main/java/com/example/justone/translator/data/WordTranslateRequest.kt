@@ -1,4 +1,4 @@
-package com.example.justone.data
+package com.example.justone.translator.data
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

@@ -1,10 +1,11 @@
-package com.example.justone
+package com.example.justone.generator
 
 import androidx.lifecycle.viewModelScope
-import com.example.justone.data.WordGeneratorRepository
-import com.example.justone.model.WordGeneratorAction
-import com.example.justone.model.WordGeneratorState
-import com.example.justone.network.onSuccess
+import com.example.foundation.BaseViewModel
+import com.example.foundation.network.onSuccess
+import com.example.justone.generator.data.WordGeneratorRepository
+import com.example.justone.generator.model.WordGeneratorAction
+import com.example.justone.generator.model.WordGeneratorState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay

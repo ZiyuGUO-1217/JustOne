@@ -1,6 +1,6 @@
-package com.example.justone.network
+package com.example.foundation.network
 
-import com.example.justone.BuildConfig
+import com.example.foundation.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

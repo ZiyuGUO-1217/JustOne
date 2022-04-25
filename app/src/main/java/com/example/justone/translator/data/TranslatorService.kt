@@ -1,11 +1,11 @@
-package com.example.justone.data
+package com.example.justone.translator.data
 
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface TranslatorService {
 
-    @POST
+    @POST("translator")
     suspend fun translateWord(
         @Body request: WordTranslateRequest
     ): String

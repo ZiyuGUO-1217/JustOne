@@ -1,6 +1,5 @@
-package com.example.justone.network
+package com.example.foundation.network
 
-import android.util.Log
 import java.io.IOException
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -51,7 +50,7 @@ inline fun <T> callApi(block: () -> ApiResult<T>): ApiResult<T> {
         when (e) {
             is IOException -> ApiResult.Error(ErrorType.NetworkError)
             is HttpException -> {
-                Log.d("callApi:", "${e.message}")
+                println("callApi:" + "${e.message}")
                 ApiResult.Error(ErrorType.ServerError)
             }
             else -> ApiResult.Error(ErrorType.ServerError)

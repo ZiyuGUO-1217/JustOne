@@ -1,5 +1,7 @@
-package com.example.justone.data
+package com.example.justone
 
+import com.example.justone.generator.data.GeneratorService
+import com.example.justone.translator.data.TranslatorService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

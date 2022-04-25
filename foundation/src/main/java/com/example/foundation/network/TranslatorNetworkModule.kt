@@ -1,4 +1,4 @@
-package com.example.justone.network
+package com.example.foundation.network
 
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,7 @@ object TranslatorNetworkModule {
         @Named("WordsTranslator") okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://api.interpreter.caiyunai.com/v1/translator")
+            .baseUrl("http://api.interpreter.caiyunai.com/v1/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

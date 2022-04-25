@@ -1,4 +1,4 @@
-package com.example.justone.data
+package com.example.justone.generator.data
 
 import retrofit2.http.GET
 import retrofit2.http.Query

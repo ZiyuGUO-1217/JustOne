@@ -18,6 +18,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,10 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.justone.WordGeneratorViewModel
-import com.example.justone.collectAsState
-import com.example.justone.model.WordGeneratorAction
-import com.example.justone.model.WordGeneratorState
+import com.example.justone.generator.WordGeneratorViewModel
+import com.example.justone.generator.model.WordGeneratorAction
+import com.example.justone.generator.model.WordGeneratorState
 import com.example.justone.ui.theme.JustOneTheme
 import com.example.justone.ui.theme.Primary
 import com.example.justone.ui.theme.Secondary
@@ -43,8 +43,9 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 
 @Composable
-fun WordsScreen(viewModel: WordGeneratorViewModel = hiltViewModel()) {
-    val state by viewModel.collectAsState()
+fun WordsScreen() {
+    val viewModel: WordGeneratorViewModel = hiltViewModel()
+    val state by viewModel.flow.collectAsState()
     val actor = viewModel::dispatch
 
     ScreenContent(state, actor)
