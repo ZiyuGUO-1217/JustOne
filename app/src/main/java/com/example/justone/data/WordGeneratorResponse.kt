@@ -1,4 +1,4 @@
-package com.example.justone.generator.data
+package com.example.justone.data
 
 data class WordGeneratorResponse(
     val status: String,

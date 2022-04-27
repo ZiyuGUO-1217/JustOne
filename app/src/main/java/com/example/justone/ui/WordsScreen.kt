@@ -32,9 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.justone.generator.WordGeneratorViewModel
-import com.example.justone.generator.model.WordGeneratorAction
-import com.example.justone.generator.model.WordGeneratorState
+import com.example.foundation.network.ResourceState
+import com.example.justone.model.JustOneAction
+import com.example.justone.model.JustOneState
+import com.example.justone.model.JustOneViewModel
 import com.example.justone.ui.theme.JustOneTheme
 import com.example.justone.ui.theme.Primary
 import com.example.justone.ui.theme.Secondary
@@ -44,7 +45,7 @@ import com.google.accompanist.placeholder.shimmer
 
 @Composable
 fun WordsScreen() {
-    val viewModel: WordGeneratorViewModel = hiltViewModel()
+    val viewModel: JustOneViewModel = hiltViewModel()
     val state by viewModel.flow.collectAsState()
     val actor = viewModel::dispatch
 
@@ -53,13 +54,14 @@ fun WordsScreen() {
 
 @Composable
 private fun ScreenContent(
-    state: WordGeneratorState,
-    actor: (action: WordGeneratorAction) -> Unit
+    state: JustOneState,
+    actor: (action: JustOneAction) -> Unit
 ) {
-    val onGenerateClick = { actor(WordGeneratorAction.GenerateWords) }
+    val onGenerateClick = { actor(JustOneAction.GenerateWords) }
     var clickedWord by remember { mutableStateOf("") }
     var dialogState by remember { mutableStateOf(DialogState.HIDE) }
     val onWordClick: (String) -> Unit = {
+        actor(JustOneAction.TranslateWord(it))
         dialogState = DialogState.WORD
         clickedWord = it
     }
@@ -81,7 +83,7 @@ private fun ScreenContent(
     }
 
     if (dialogState != DialogState.HIDE) {
-        WordDialog(clickedWord, state.timer, dialogState, onClose, onConfirm)
+        WordDialog(clickedWord, state.translation, state.timer, dialogState, onClose, onConfirm)
     }
 }
 
@@ -128,6 +130,7 @@ fun WordList(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun WordText(
     word: String,
@@ -162,8 +165,10 @@ private fun WordText(
 @Composable
 fun WordsScreenPreview() {
     val words = listOf("Modifier", "Preview", "Composable", "Content", "background")
+    val translation = ResourceState.Success("translation")
     val wordsNumber = words.size
+    val state = JustOneState(words = words, translation = translation, wordsNumber = wordsNumber, timer = 60)
     JustOneTheme {
-        ScreenContent(WordGeneratorState(words, wordsNumber, 60)) {}
+        ScreenContent(state = state, actor = {})
     }
 }

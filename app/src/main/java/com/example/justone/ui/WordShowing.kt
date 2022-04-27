@@ -11,33 +11,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.foundation.network.ResourceState
-import com.example.justone.translator.WordTranslatorViewModel
-import com.example.justone.translator.model.WordTranslatorAction
 import com.example.justone.ui.theme.Secondary
 import com.example.justone.ui.widgets.FilledButton
 
 @Composable
 fun WordShowing(
     word: String,
+    translation: ResourceState<String>,
     onClose: () -> Unit,
     onConfirm: () -> Unit,
     topContentModifier: Modifier = Modifier,
     bottomContentModifier: Modifier = Modifier
 ) {
-    val viewModel: WordTranslatorViewModel = hiltViewModel()
-    val state by viewModel.flow.collectAsState()
-
-    viewModel.dispatch(WordTranslatorAction.TranslateWord(word))
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +47,7 @@ fun WordShowing(
                     fontSize = 80.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
-                Crossfade(targetState = state.translation) { translation ->
+                Crossfade(targetState = translation) { translation ->
                     when (translation) {
                         is ResourceState.Success -> TranslationText(translation.data)
                         is ResourceState.Loading -> CircularProgressIndicator(color = Secondary)

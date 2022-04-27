@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.foundation.network.ResourceState
 
 private const val DIALOG_FRACTION = 0.82f
 
@@ -23,6 +24,7 @@ private const val DIALOG_FRACTION = 0.82f
 @Composable
 fun WordDialog(
     word: String,
+    translation: ResourceState<String>,
     timer: Int,
     dialogState: DialogState,
     onClose: () -> Unit = {},
@@ -32,7 +34,11 @@ fun WordDialog(
 
     Dialog(
         onDismissRequest = { onClose() },
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false,
+            usePlatformDefaultWidth = false
+        )
     ) {
         Card(
             modifier = Modifier
@@ -50,8 +56,12 @@ fun WordDialog(
                 .fillMaxWidth()
 
             when (dialogState) {
-                DialogState.WORD -> WordShowing(word, onClose, onConfirm, topContentModifier, bottomContentModifier)
-                DialogState.CLUE -> CluePreparing(dialogWidth, timer, bottomContentModifier)
+                DialogState.WORD -> {
+                    WordShowing(word, translation, onClose, onConfirm, topContentModifier, bottomContentModifier)
+                }
+                DialogState.CLUE -> {
+                    CluePreparing(dialogWidth, timer, bottomContentModifier)
+                }
             }
         }
     }

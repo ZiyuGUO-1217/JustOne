@@ -1,5 +1,6 @@
 package com.example.foundation.network
 
+import com.example.foundation.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +31,7 @@ object TranslatorNetworkModule {
     }
 
     @Provides
-    @Named( "WordsTranslator")
+    @Named("WordsTranslator")
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
@@ -43,7 +44,7 @@ object TranslatorNetworkModule {
             .addInterceptor { chain ->
                 val builder = chain.request().newBuilder()
                 builder.header("content-type", "application/json")
-                builder.header("x-authorization", "token " + "3975l6lr5pcbvidl6jl2")
+                builder.header("x-authorization", "token " + BuildConfig.TRANSLATION_API_KEY)
                 return@addInterceptor chain.proceed(builder.build())
             }
             .addInterceptor(logging)
