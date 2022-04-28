@@ -8,7 +8,6 @@ import com.example.foundation.network.onSuccess
 import com.example.justone.data.JustOneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -30,14 +29,15 @@ class JustOneViewModel @Inject constructor(
     }
 
     private fun getRandomWords() {
-        updateState { copy(words = emptyList(), isLoading = true) }
+        updateState { copy(words = ResourceState.Loading) }
         viewModelScope.launch {
-            delay(3000L)
             repository.getRandomWordList(wordsNumber)
                 .onSuccess { wordList ->
-                    updateState { copy(words = wordList) }
+                    updateState { copy(words = ResourceState.Success(wordList)) }
                 }
-            updateState { copy(isLoading = false) }
+                .onError { errorType ->
+                    updateState { copy(words = ResourceState.Error(errorType)) }
+                }
         }
     }
 

@@ -77,7 +77,6 @@ private fun ScreenContent(
             modifier = Modifier.padding(it),
             words = state.words,
             wordsNumber = state.wordsNumber,
-            isLoading = state.isLoading,
             onWordClick = onWordClick
         )
     }
@@ -112,20 +111,20 @@ private fun BottomGenerateButton(onGenerateClick: () -> Unit) {
 @Composable
 fun WordList(
     modifier: Modifier,
-    words: List<String>,
+    words: ResourceState<List<String>>,
     wordsNumber: Int,
-    isLoading: Boolean,
     onWordClick: (String) -> Unit
 ) {
+    val isLoading = words is ResourceState.Loading
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         for (index in 0 until wordsNumber) {
-            val word = "".takeIf { words.isEmpty() } ?: words[index]
-            val highlight = PlaceholderHighlight.shimmer(Color.White).takeIf { isLoading }
-            WordText(word, highlight, onWordClick)
+            val word = if (words is ResourceState.Success) words.data[index] else ""
+            WordText(word, isLoading, onWordClick)
         }
     }
 }
@@ -134,13 +133,14 @@ fun WordList(
 @Composable
 private fun WordText(
     word: String,
-    highlight: PlaceholderHighlight?,
+    isLoading: Boolean,
     onWordClick: (String) -> Unit
 ) {
     val color = Secondary
     val shape = RoundedCornerShape(32.dp)
     val isWordNotReady = word.isBlank()
     val modifier = if (isWordNotReady) Modifier.width(256.dp) else Modifier
+    val highlight = PlaceholderHighlight.shimmer(Color.White).takeIf { isLoading }
 
     Card(
         onClick = { if (isWordNotReady.not()) onWordClick(word) },
@@ -167,7 +167,7 @@ fun WordsScreenPreview() {
     val words = listOf("Modifier", "Preview", "Composable", "Content", "background")
     val translation = ResourceState.Success("translation")
     val wordsNumber = words.size
-    val state = JustOneState(words = words, translation = translation, wordsNumber = wordsNumber, timer = 60)
+    val state = JustOneState(words = ResourceState.Success(words), translation = translation, wordsNumber = wordsNumber, timer = 60)
     JustOneTheme {
         ScreenContent(state = state, actor = {})
     }

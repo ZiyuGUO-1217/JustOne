@@ -3,9 +3,8 @@ package com.example.justone.model
 import com.example.foundation.network.ResourceState
 
 data class JustOneState(
-    val words: List<String> = emptyList(),
+    val words: ResourceState<List<String>> = ResourceState.Empty,
     val translation: ResourceState<String> = ResourceState.Loading,
     val wordsNumber: Int,
-    val timer: Int,
-    val isLoading: Boolean = false
+    val timer: Int
 )
