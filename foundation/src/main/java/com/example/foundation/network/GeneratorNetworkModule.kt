@@ -13,6 +13,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val GENERATOR_READ_TIMEOUT = 7_000L
+private const val GENERATOR_WRITE_TIMEOUT = 7_000L
+
 @Module
 @InstallIn(SingletonComponent::class)
 object GeneratorNetworkModule {
@@ -39,8 +42,8 @@ object GeneratorNetworkModule {
         }
 
         return OkHttpClient.Builder()
-            .readTimeout(5_000L, TimeUnit.MILLISECONDS)
-            .writeTimeout(5_000L, TimeUnit.MILLISECONDS)
+            .readTimeout(GENERATOR_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+            .writeTimeout(GENERATOR_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
             .addInterceptor { chain ->
                 val builder = chain.request().newBuilder()
                 builder.header("X-RapidAPI-Host", "words-generator.p.rapidapi.com")

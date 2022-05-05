@@ -51,16 +51,14 @@ fun WordDialog(
             val topContentModifier = Modifier
                 .fillMaxWidth()
                 .height(height)
-            val bottomContentModifier = Modifier
                 .padding(horizontal = 32.dp, vertical = 16.dp)
-                .fillMaxWidth()
 
             when (dialogState) {
                 DialogState.WORD -> {
-                    WordShowing(word, translation, onClose, onConfirm, topContentModifier, bottomContentModifier)
+                    WordShowing(word, translation, onClose, onConfirm, topContentModifier)
                 }
                 DialogState.CLUE -> {
-                    CluePreparing(dialogWidth, timer, bottomContentModifier)
+                    CluePreparing(dialogWidth = dialogWidth, timer = timer, onCountDownFinished = onClose)
                 }
             }
         }

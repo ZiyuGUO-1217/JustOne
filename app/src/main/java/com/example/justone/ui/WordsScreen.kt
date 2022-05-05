@@ -57,16 +57,20 @@ private fun ScreenContent(
     state: JustOneState,
     actor: (action: JustOneAction) -> Unit
 ) {
-    val onGenerateClick = { actor(JustOneAction.GenerateWords) }
     var clickedWord by remember { mutableStateOf("") }
     var dialogState by remember { mutableStateOf(DialogState.HIDE) }
+
+    val onGenerateClick = { actor(JustOneAction.GenerateWords) }
     val onWordClick: (String) -> Unit = {
         actor(JustOneAction.TranslateWord(it))
         dialogState = DialogState.WORD
         clickedWord = it
     }
     val onClose = { dialogState = DialogState.HIDE }
-    val onConfirm = { dialogState = DialogState.CLUE }
+    val onConfirm = {
+        dialogState = DialogState.CLUE
+        actor(JustOneAction.HideWords)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -167,7 +171,12 @@ fun WordsScreenPreview() {
     val words = listOf("Modifier", "Preview", "Composable", "Content", "background")
     val translation = ResourceState.Success("translation")
     val wordsNumber = words.size
-    val state = JustOneState(words = ResourceState.Success(words), translation = translation, wordsNumber = wordsNumber, timer = 60)
+    val state = JustOneState(
+        words = ResourceState.Success(words),
+        translation = translation,
+        wordsNumber = wordsNumber,
+        timer = 60
+    )
     JustOneTheme {
         ScreenContent(state = state, actor = {})
     }

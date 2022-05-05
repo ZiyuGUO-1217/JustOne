@@ -15,7 +15,7 @@ class JustOneViewModel @Inject constructor(
     private val repository: JustOneRepository
 ) : BaseViewModel<JustOneState, JustOneAction>() {
     private val wordsNumber: Int = 5
-    private val timer: Int = 60
+    private val timer: Int = 120
 
     override fun configureInitState(): JustOneState {
         return JustOneState(wordsNumber = wordsNumber, timer = timer)
@@ -25,6 +25,7 @@ class JustOneViewModel @Inject constructor(
         when (action) {
             JustOneAction.GenerateWords -> getRandomWords()
             is JustOneAction.TranslateWord -> translateWord(action.word)
+            JustOneAction.HideWords -> hideWords()
         }
     }
 
@@ -52,6 +53,10 @@ class JustOneViewModel @Inject constructor(
                     updateState { copy(translation = ResourceState.Error(errorType)) }
                 }
         }
+    }
+
+    private fun hideWords() {
+        updateState { copy(words = ResourceState.Empty) }
     }
 
 }

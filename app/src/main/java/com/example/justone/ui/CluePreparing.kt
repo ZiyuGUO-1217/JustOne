@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
@@ -27,18 +28,23 @@ import com.example.justone.ui.widgets.CountDownTimer
 import com.example.justone.ui.widgets.FilledButton
 
 @Composable
-fun CluePreparing(dialogWidth: Int, timer: Int, bottomContentModifier: Modifier = Modifier) {
+fun CluePreparing(dialogWidth: Int, timer: Int, onCountDownFinished: () -> Unit) {
     var inputClue by remember { mutableStateOf("") }
-    val onCountDownFinished = {}
     val onConfirm = {}
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CountDownTimer(timer, dialogWidth, onCountDownFinished)
-        Row(modifier = bottomContentModifier) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 32.dp)
+                .fillMaxWidth()
+        ) {
             val modifier = Modifier.weight(1f)
             ClueInputField(modifier, inputClue) {
                 inputClue = it.replace('\n', ' ')

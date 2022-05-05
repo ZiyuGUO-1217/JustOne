@@ -23,9 +23,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.example.justone.ui.theme.Green400
-import com.example.justone.ui.theme.Primary
 import com.example.justone.ui.theme.Red400
 import com.example.justone.ui.theme.Yellow400
 
@@ -33,20 +34,20 @@ private const val TIMER_ANGLE = 360f
 
 @Composable
 fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit = {}) {
+    val haptic = LocalHapticFeedback.current
     val unitWidth = timerWidth / (10 + 2).toFloat()
     val radius = (unitWidth * 8) / 2
     val canvasSize = with(LocalDensity.current) { timerWidth.toDp() }
 
     val animateArcFloat = remember { Animatable(1f) }
-    var countDownNumberColor by remember { mutableStateOf(Primary) }
 
     var countDownTimer by remember { mutableStateOf(timer) }
     val leftTime by animateIntAsState(
         targetValue = countDownTimer,
         animationSpec = tween(durationMillis = timer * 1000, easing = LinearEasing),
         finishedListener = {
-            countDownNumberColor = Color.Red
             onCountDownFinished()
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         }
     )
 
@@ -55,7 +56,7 @@ fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit 
             drawBackgroundRing(radius, unitWidth)
             drawForegroundArc(animateArcFloat, radius, unitWidth)
         }
-        CountDownNumber(leftTime, countDownNumberColor)
+        CountDownNumber(leftTime)
     }
 
     LaunchedEffect(animateArcFloat) {
