@@ -6,13 +6,15 @@ import com.example.foundation.network.ResourceState
 import com.example.foundation.network.onError
 import com.example.foundation.network.onSuccess
 import com.example.justone.data.JustOneRepository
+import com.example.justone.data.ble.JustOneAdapter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class JustOneViewModel @Inject constructor(
-    private val repository: JustOneRepository
+    private val repository: JustOneRepository,
+    private val justOneAdapter: JustOneAdapter
 ) : BaseViewModel<JustOneState, JustOneAction>() {
     private val wordsNumber: Int = 5
     private val timer: Int = 120
