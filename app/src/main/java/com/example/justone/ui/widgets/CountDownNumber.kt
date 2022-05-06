@@ -45,7 +45,7 @@ private fun AnimatedText(number: Int, countDownNumberColor: Color) {
     AnimatedContent(
         targetState = number,
         transitionSpec = {
-            contentTransform.using(SizeTransform(clip = false))
+            contentTransform.using(SizeTransform(clip = true))
         }
     ) { targetNumber ->
         Text(

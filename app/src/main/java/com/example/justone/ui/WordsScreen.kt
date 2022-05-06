@@ -1,7 +1,8 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 
 package com.example.justone.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +19,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,36 +31,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.foundation.network.ResourceState
+import com.example.justone.LocalJustOneActor
 import com.example.justone.model.JustOneAction
 import com.example.justone.model.JustOneState
-import com.example.justone.model.JustOneViewModel
 import com.example.justone.ui.theme.JustOneTheme
 import com.example.justone.ui.theme.Primary
 import com.example.justone.ui.theme.Secondary
+import com.example.justone.ui.widgets.DialogContainer
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 
 @Composable
-fun WordsScreen() {
-    val viewModel: JustOneViewModel = hiltViewModel()
-    val state by viewModel.flow.collectAsState()
-    val actor = viewModel::dispatch
-
-    ScreenContent(state, actor)
-}
-
-@Composable
-private fun ScreenContent(
-    state: JustOneState,
-    actor: (action: JustOneAction) -> Unit
-) {
+fun WordsScreen(state: JustOneState) {
+    val actor = LocalJustOneActor.current
     var clickedWord by remember { mutableStateOf("") }
     var dialogState by remember { mutableStateOf(DialogState.HIDE) }
 
-    val onGenerateClick = { actor(JustOneAction.GenerateWords) }
+    val onGenerateClick = {
+        if (state.words != ResourceState.Loading) actor(JustOneAction.GenerateWords)
+    }
     val onWordClick: (String) -> Unit = {
         actor(JustOneAction.TranslateWord(it))
         dialogState = DialogState.WORD
@@ -71,6 +62,7 @@ private fun ScreenContent(
         dialogState = DialogState.CLUE
         actor(JustOneAction.HideWords)
     }
+    val onSubmit: (String) -> Unit = { clue -> actor(JustOneAction.SubmitClue(clue)) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -86,7 +78,13 @@ private fun ScreenContent(
     }
 
     if (dialogState != DialogState.HIDE) {
-        WordDialog(clickedWord, state.translation, state.timer, dialogState, onClose, onConfirm)
+        DialogContainer(onClose) { dialogWidth ->
+            when (dialogState) {
+                DialogState.WORD -> WordShowing(dialogWidth, clickedWord, state.translation, onClose, onConfirm)
+                DialogState.CLUE -> CluePreparing(dialogWidth, state.timer, onSubmit, onClose)
+                DialogState.GUESS -> ClueShowing()
+            }
+        }
     }
 }
 
@@ -178,6 +176,6 @@ fun WordsScreenPreview() {
         timer = 60
     )
     JustOneTheme {
-        ScreenContent(state = state, actor = {})
+        WordsScreen(state = state)
     }
 }

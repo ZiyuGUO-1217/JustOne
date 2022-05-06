@@ -1,7 +1,5 @@
 package com.example.justone.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -28,29 +25,28 @@ import com.example.justone.ui.widgets.CountDownTimer
 import com.example.justone.ui.widgets.FilledButton
 
 @Composable
-fun CluePreparing(dialogWidth: Int, timer: Int, onCountDownFinished: () -> Unit) {
+fun CluePreparing(
+    dialogWidth: Int,
+    timer: Int,
+    onSubmit: (String) -> Unit,
+    onCountDownFinished: () -> Unit
+) {
     var inputClue by remember { mutableStateOf("") }
-    val onConfirm = {}
 
-    Column(
+    CountDownTimer(timer, dialogWidth, onCountDownFinished)
+    Row(
         modifier = Modifier
-            .padding(vertical = 16.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 32.dp)
+            .fillMaxWidth()
     ) {
-        CountDownTimer(timer, dialogWidth, onCountDownFinished)
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 32.dp)
-                .fillMaxWidth()
-        ) {
-            val modifier = Modifier.weight(1f)
-            ClueInputField(modifier, inputClue) {
-                inputClue = it.replace('\n', ' ')
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            FilledButton(text = "Submit", onConfirm = onConfirm)
+        val modifier = Modifier.weight(1f)
+        ClueInputField(modifier, inputClue) {
+            inputClue = it.replace('\n', ' ')
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        FilledButton(text = "Submit") {
+            onSubmit(inputClue)
+            inputClue = ""
         }
     }
 }

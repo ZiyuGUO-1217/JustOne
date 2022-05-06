@@ -28,6 +28,8 @@ class JustOneViewModel @Inject constructor(
             JustOneAction.GenerateWords -> getRandomWords()
             is JustOneAction.TranslateWord -> translateWord(action.word)
             JustOneAction.HideWords -> hideWords()
+            is JustOneAction.SubmitClue -> submitClue(action.clue)
+            JustOneAction.DeduplicateClue -> deduplicateClue()
         }
     }
 
@@ -61,4 +63,10 @@ class JustOneViewModel @Inject constructor(
         updateState { copy(words = ResourceState.Empty) }
     }
 
+    private fun submitClue(inputClue: String) {
+        val updatedClues = state.clues.toMutableList().apply { add(inputClue) }
+        updateState { copy(clues = updatedClues) }
+    }
+
+    private fun deduplicateClue() {}
 }
