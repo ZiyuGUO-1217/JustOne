@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.foundation.network.ResourceState
-import com.example.justone.LocalJustOneActor
 import com.example.justone.model.JustOneAction
 import com.example.justone.model.JustOneState
 import com.example.justone.ui.theme.JustOneTheme
