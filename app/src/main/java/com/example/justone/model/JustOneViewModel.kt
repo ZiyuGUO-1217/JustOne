@@ -17,7 +17,7 @@ class JustOneViewModel @Inject constructor(
     private val justOneAdapter: JustOneAdapter
 ) : BaseViewModel<JustOneState, JustOneAction>() {
     private val wordsNumber: Int = 5
-    private val timer: Int = 20
+    private val timer: Int = 120
 
     override fun configureInitState(): JustOneState {
         return JustOneState(wordsNumber = wordsNumber, timer = timer)
@@ -25,7 +25,6 @@ class JustOneViewModel @Inject constructor(
 
     override fun dispatch(action: JustOneAction) {
         when (action) {
-            is JustOneAction.SelectGameMode -> selectGameMode(action.onlineMode)
             JustOneAction.GenerateWords -> getRandomWords()
             is JustOneAction.TranslateWord -> translateWord(action.word)
             JustOneAction.HideWords -> hideWords()
@@ -33,10 +32,6 @@ class JustOneViewModel @Inject constructor(
             JustOneAction.DeduplicateClue -> deduplicateClue()
             is JustOneAction.SetupOnlineGame -> setupOnlineGame(action.roomId, action.playerId)
         }
-    }
-
-    private fun selectGameMode(onlineMode: Boolean) {
-        updateState { copy(onlineMode = onlineMode) }
     }
 
     private fun getRandomWords() {

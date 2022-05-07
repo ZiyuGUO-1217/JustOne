@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.justone.LocalJustOneActor
 import com.example.justone.model.JustOneAction
 import com.example.justone.ui.widgets.CountDownTimer
 import com.example.justone.ui.widgets.FilledButton
