@@ -47,22 +47,25 @@ import com.google.accompanist.placeholder.shimmer
 fun WordsScreen(state: JustOneState) {
     val actor = LocalJustOneActor.current
     var clickedWord by remember { mutableStateOf("") }
-    var dialogState by remember { mutableStateOf(DialogState.HIDE) }
+    val (dialogState, setDialogState) = remember { mutableStateOf(DialogState.HIDE) }
 
     val onGenerateClick = {
         if (state.words != ResourceState.Loading) actor(JustOneAction.GenerateWords)
     }
     val onWordClick: (String) -> Unit = {
+        setDialogState(DialogState.WORD)
         actor(JustOneAction.TranslateWord(it))
-        dialogState = DialogState.WORD
         clickedWord = it
     }
-    val onClose = { dialogState = DialogState.HIDE }
+    val onClose = { setDialogState(DialogState.HIDE) }
     val onConfirm = {
-        dialogState = DialogState.CLUE
+        setDialogState(DialogState.CLUE)
         actor(JustOneAction.HideWords)
     }
-    val onSubmit: (String) -> Unit = { clue -> actor(JustOneAction.SubmitClue(clue)) }
+    val onCountDownFinished = {
+        setDialogState(DialogState.GUESS)
+        actor(JustOneAction.DeduplicateClue)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -81,8 +84,8 @@ fun WordsScreen(state: JustOneState) {
         DialogContainer(onClose) { dialogWidth ->
             when (dialogState) {
                 DialogState.WORD -> WordShowing(dialogWidth, clickedWord, state.translation, onClose, onConfirm)
-                DialogState.CLUE -> CluePreparing(dialogWidth, state.timer, onSubmit, onClose)
-                DialogState.GUESS -> ClueShowing()
+                DialogState.CLUE -> CluePreparing(dialogWidth, state.timer, onCountDownFinished)
+                DialogState.GUESS -> ClueShowing(dialogWidth, state.clues, setDialogState)
             }
         }
     }

@@ -17,7 +17,7 @@ class JustOneViewModel @Inject constructor(
     private val justOneAdapter: JustOneAdapter
 ) : BaseViewModel<JustOneState, JustOneAction>() {
     private val wordsNumber: Int = 5
-    private val timer: Int = 120
+    private val timer: Int = 20
 
     override fun configureInitState(): JustOneState {
         return JustOneState(wordsNumber = wordsNumber, timer = timer)
@@ -68,5 +68,19 @@ class JustOneViewModel @Inject constructor(
         updateState { copy(clues = updatedClues) }
     }
 
-    private fun deduplicateClue() {}
+    private fun deduplicateClue() {
+        val clues = state.clues.toMutableList().apply {
+            state.clues.forEach { clue ->
+                val duplicatedWeight = count { isDuplicated(it, clue) }
+                if (duplicatedWeight != 1) removeAll { isDuplicated(it, clue) }
+            }
+        }
+        updateState { copy(clues = clues) }
+    }
+
+    private fun isDuplicated(firstClue: String, secondClue: String): Boolean {
+        val trimmedFirstClue = firstClue.replace(" ", "").lowercase()
+        val trimmedSecondClue = secondClue.replace(" ", "").lowercase()
+        return trimmedFirstClue.contains(trimmedSecondClue) || trimmedSecondClue.contains(trimmedFirstClue)
+    }
 }
