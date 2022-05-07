@@ -37,7 +37,7 @@ class BLEManager(private val context: Context) {
             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
             .setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT)
-            .setReportDelay(1000L)
+            .setReportDelay(5000L)
             .build()
     }
 

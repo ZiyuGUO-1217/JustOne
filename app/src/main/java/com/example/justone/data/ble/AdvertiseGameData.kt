@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AdvertiseGameData(val playerId: String) {
-    var gameState: GameState = GameState.READY
+    var gameState: GameState = GameState.PREPARE
     var playerCount: Int = 0
     var guessPlayer: String? = null
     var keyWord: String? = null
@@ -13,6 +13,7 @@ data class AdvertiseGameData(val playerId: String) {
 }
 
 enum class GameState {
+    PREPARE,
     READY,
     KEY,
     CLUE,

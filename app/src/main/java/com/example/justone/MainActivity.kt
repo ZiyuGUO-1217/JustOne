@@ -3,15 +3,11 @@ package com.example.justone
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.justone.model.JustOneAction
 import com.example.justone.model.JustOneViewModel
-import com.example.justone.ui.WordsScreen
+import com.example.justone.ui.HomeScreen
 import com.example.justone.ui.theme.JustOneTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +33,7 @@ class MainActivity : ComponentActivity() {
         val actor = viewModel::dispatch
 
         CompositionLocalProvider(LocalJustOneActor provides actor) {
-            WordsScreen(state)
+            HomeScreen(state)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.justone.ui
+package com.example.justone.ui.offline
 
 enum class DialogState {
     HIDE,
