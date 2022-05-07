@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 
-package com.example.justone.ui
+package com.example.justone.ui.offline
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package com.example.justone.ui
+package com.example.justone.ui.offline
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

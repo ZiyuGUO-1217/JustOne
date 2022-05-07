@@ -10,9 +10,37 @@ class JustOneAdapter @Inject constructor(private val bleManager: BLEManager) {
     private lateinit var localGameData: AdvertiseGameData
     private val playerMap: MutableMap<String, String?> = mutableMapOf()
 
+    // 输入房间号和玩家姓名，开始游戏
     fun setupGame(roomId: String, playerId: String) {
         roomUuid = BLE_ADV_UUID.replaceRange(BLE_ADV_UUID.length - roomId.length, BLE_ADV_UUID.length, roomId)
         localGameData = AdvertiseGameData(playerId)
+    }
+
+    // 猜词玩家向其它玩家提供关键词
+    fun announceKeyWord(keyWord: String) {
+        localGameData.keyWord = keyWord
+        localGameData.gameState = GameState.KEY
+    }
+
+    // 其它玩家向猜词玩家提供线索词
+    fun raiseClueWord(clueWord: String) {
+        localGameData.clueWord = clueWord
+        localGameData.gameState = GameState.CLUE
+    }
+
+    // 猜词玩家向其它玩家公布猜词结果
+    fun announceResult(result: Boolean) {
+        localGameData.guessResult = result
+    }
+
+    // 进入下一轮
+    fun startNextRound() {
+        // 重置数据
+        playerMap.replaceAll { _, _ -> null }
+        localGameData.guessResult = null
+        localGameData.keyWord = null
+        localGameData.clueWord = null
+        localGameData.gameState = GameState.READY
     }
 
     fun updateData() {
@@ -44,6 +72,10 @@ class JustOneAdapter @Inject constructor(private val bleManager: BLEManager) {
         }
 
         when(localGameData.gameState) {
+            // 等待其它玩家阶段
+            GameState.PREPARE -> {
+
+            }
             // 初始化游戏，决定下一个猜词的人
             GameState.READY -> {
                 // 取出所有玩家ID并排序
@@ -65,11 +97,6 @@ class JustOneAdapter @Inject constructor(private val bleManager: BLEManager) {
                         localGameData.guessPlayer = sortedPlayerList[0]
                     }
                 }
-                // 重置数据
-                playerMap.replaceAll { _, _ -> null }
-                localGameData.guessResult = null
-                localGameData.keyWord = null
-                localGameData.clueWord = null
                 localGameData.gameState = GameState.KEY
             }
             GameState.KEY -> {
@@ -101,10 +128,9 @@ class JustOneAdapter @Inject constructor(private val bleManager: BLEManager) {
                 if (iAmGuessPlayer().not()) {
                     localGameData.guessResult = gameDataList.first {
                         // 从猜词玩家处获得结果或者从已经取得结果的其它玩家处获得结果
-                        localGameData.guessPlayer == it.playerId || (it.gameState == GameState.GUESS && it.guessResult != null)
+                        localGameData.guessPlayer == it.playerId || (it.gameState == GameState.PREPARE && it.guessResult != null)
                     }.guessResult
-                    // TODO: 将重新开始下一轮游戏移到按键事件中去处理
-                    localGameData.gameState = GameState.READY
+                    localGameData.gameState = GameState.PREPARE
                 }
             }
         }

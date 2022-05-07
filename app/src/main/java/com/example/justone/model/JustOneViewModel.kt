@@ -25,12 +25,18 @@ class JustOneViewModel @Inject constructor(
 
     override fun dispatch(action: JustOneAction) {
         when (action) {
+            is JustOneAction.SelectGameMode -> selectGameMode(action.onlineMode)
             JustOneAction.GenerateWords -> getRandomWords()
             is JustOneAction.TranslateWord -> translateWord(action.word)
             JustOneAction.HideWords -> hideWords()
             is JustOneAction.SubmitClue -> submitClue(action.clue)
             JustOneAction.DeduplicateClue -> deduplicateClue()
+            is JustOneAction.SetupOnlineGame -> setupOnlineGame(action.roomId, action.playerId)
         }
+    }
+
+    private fun selectGameMode(onlineMode: Boolean) {
+        updateState { copy(onlineMode = onlineMode) }
     }
 
     private fun getRandomWords() {
@@ -76,6 +82,13 @@ class JustOneViewModel @Inject constructor(
             }
         }
         updateState { copy(clues = clues) }
+    }
+
+    private fun setupOnlineGame(roomId: String, playerId: String) {
+        if (playerId.isNotEmpty()) {
+            justOneAdapter.setupGame(roomId, playerId)
+            updateState { copy(onlineSetup = true) }
+        }
     }
 
     private fun isDuplicated(firstClue: String, secondClue: String): Boolean {
