@@ -6,21 +6,19 @@ import com.example.foundation.network.ResourceState
 import com.example.foundation.network.onError
 import com.example.foundation.network.onSuccess
 import com.example.justone.data.JustOneRepository
-import com.example.justone.data.ble.JustOneAdapter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class JustOneViewModel @Inject constructor(
+open class JustOneViewModel @Inject constructor(
     private val repository: JustOneRepository,
-    private val justOneAdapter: JustOneAdapter
 ) : BaseViewModel<JustOneState, JustOneAction>() {
-    private val wordsNumber: Int = 5
+    val wordsNumber: Int = 5
     private val timer: Int = 120
 
     override fun configureInitState(): JustOneState {
-        return JustOneState(wordsNumber = wordsNumber, timer = timer)
+        return JustOneState(timer = timer)
     }
 
     override fun dispatch(action: JustOneAction) {
@@ -30,7 +28,6 @@ class JustOneViewModel @Inject constructor(
             JustOneAction.HideWords -> hideWords()
             is JustOneAction.SubmitClue -> submitClue(action.clue)
             JustOneAction.DeduplicateClue -> deduplicateClue()
-            is JustOneAction.SetupOnlineGame -> setupOnlineGame(action.roomId, action.playerId)
         }
     }
 
@@ -77,13 +74,6 @@ class JustOneViewModel @Inject constructor(
             }
         }
         updateState { copy(clues = clues) }
-    }
-
-    private fun setupOnlineGame(roomId: String, playerId: String) {
-        if (playerId.isNotEmpty()) {
-            justOneAdapter.setupGame(roomId, playerId)
-            updateState { copy(onlineSetup = true) }
-        }
     }
 
     private fun isDuplicated(firstClue: String, secondClue: String): Boolean {

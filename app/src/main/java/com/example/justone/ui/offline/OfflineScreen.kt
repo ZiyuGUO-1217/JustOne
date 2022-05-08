@@ -21,7 +21,8 @@ fun OfflineScreen(navHostController: NavHostController) {
     val state by viewModel.flow.collectAsState()
 
     CompositionLocalProvider(LocalJustOneActor provides viewModel::dispatch) {
-        WordsScreen(state)
+        val wordsNumber = viewModel.wordsNumber
+        WordsScreen(state, wordsNumber)
     }
 
     BackHandler {

@@ -12,23 +12,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.justone.model.JustOneAction
-import com.example.justone.ui.offline.LocalJustOneActor
+import com.example.justone.model.JustOneAction.OnlineAction
 import com.example.justone.ui.widgets.DialogContainer
 import com.example.justone.ui.widgets.FilledButton
 import com.example.justone.ui.widgets.TextInputField
 
 @Composable
-fun SetupDialog() {
-    val actor = LocalJustOneActor.current
+fun SetupDialog(onClose: () -> Unit) {
+    val actor = LocalOnlineActor.current
     var roomId by remember { mutableStateOf("") }
     var playerId by remember { mutableStateOf("") }
 
     val onSetupClick = {
-        actor(JustOneAction.SetupOnlineGame(roomId, playerId))
+        actor(OnlineAction.SetupOnlineGame(roomId, playerId))
     }
 
-    DialogContainer {
+    DialogContainer(onClose) {
         Row(
             modifier = Modifier
                 .padding(horizontal = 32.dp)

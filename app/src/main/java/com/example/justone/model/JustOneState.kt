@@ -6,9 +6,5 @@ data class JustOneState(
     val words: ResourceState<List<String>> = ResourceState.Empty,
     val translation: ResourceState<String> = ResourceState.Loading,
     val clues: List<String> = emptyList(),
-    val wordsNumber: Int,
-    val timer: Int,
-
-    val onlineSetup: Boolean = false,
-    val onlinePlayers: List<String> = emptyList()
+    val timer: Int
 )

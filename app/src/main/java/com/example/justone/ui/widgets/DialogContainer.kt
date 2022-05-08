@@ -33,7 +33,7 @@ fun DialogContainer(
     Dialog(
         onDismissRequest = { onClose() },
         properties = DialogProperties(
-            dismissOnBackPress = false,
+            dismissOnBackPress = true,
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false
         )

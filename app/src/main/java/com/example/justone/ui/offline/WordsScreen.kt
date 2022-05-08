@@ -43,7 +43,7 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 
 @Composable
-fun WordsScreen(state: JustOneState) {
+fun WordsScreen(state: JustOneState, wordsNumber: Int) {
     val actor = LocalJustOneActor.current
     var clickedWord by remember { mutableStateOf("") }
     val (dialogState, setDialogState) = remember { mutableStateOf(DialogState.HIDE) }
@@ -74,7 +74,7 @@ fun WordsScreen(state: JustOneState) {
         WordList(
             modifier = Modifier.padding(it),
             words = state.words,
-            wordsNumber = state.wordsNumber,
+            wordsNumber = wordsNumber,
             onWordClick = onWordClick
         )
     }
@@ -174,10 +174,9 @@ fun WordsScreenPreview() {
     val state = JustOneState(
         words = ResourceState.Success(words),
         translation = translation,
-        wordsNumber = wordsNumber,
         timer = 60
     )
     JustOneTheme {
-        WordsScreen(state = state)
+        WordsScreen(state = state, wordsNumber)
     }
 }
