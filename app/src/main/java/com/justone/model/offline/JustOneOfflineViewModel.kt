@@ -1,9 +1,9 @@
 package com.justone.model.offline
 
 import androidx.lifecycle.viewModelScope
+import com.justone.domain.JustOneUseCase
 import com.justone.foundation.BaseViewModel
 import com.justone.foundation.network.ResourceState
-import com.justone.domain.JustOneUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -27,14 +27,17 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     override fun configureInitState(): JustOneOfflineState {
-        return JustOneOfflineState(timer = useCase.countDownTimer)
+        return JustOneOfflineState(
+            timer = useCase.countDownTimer,
+            wordsNumber = useCase.wordsNumber
+        )
     }
 
     override fun dispatch(action: OfflineAction) {
         when (action) {
             OfflineAction.GenerateWords -> getRandomWords()
             is OfflineAction.TranslateWord -> translateWord(action.word)
-            OfflineAction.HideWords -> hideWords()
+            is OfflineAction.SelectKeyword -> onKeywordSelected(action.keyword)
             is OfflineAction.SubmitClue -> submitClue(action.clue)
             OfflineAction.DeduplicateClue -> deduplicateClue()
         }
@@ -52,8 +55,13 @@ class JustOneOfflineViewModel @Inject constructor(
         }
     }
 
-    private fun hideWords() {
-        updateState { copy(words = ResourceState.Empty) }
+    private fun onKeywordSelected(keyword: String) {
+        updateState {
+            copy(
+                words = ResourceState.Empty,
+                keyword = keyword
+            )
+        }
     }
 
     private fun submitClue(inputClue: String) {
@@ -63,9 +71,8 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     private fun deduplicateClue() {
-        val submittedClues = state.submittedClues
         updateState {
-            copy(submittedClues = useCase.deduplicateClue(submittedClues))
+            copy(submittedClues = useCase.deduplicateClue(state.submittedClues, state.keyword))
         }
     }
 }

@@ -11,6 +11,12 @@ object ClueUtils {
         }
     }
 
+    fun checkClueValidation(clueList: List<String>, keyword: String): List<String> {
+        return clueList.toMutableList().apply {
+            removeIf { isDuplicated(it, keyword) }
+        }
+    }
+
     private fun isDuplicated(firstClue: String, secondClue: String): Boolean {
         val trimmedFirstClue = firstClue.replace(" ", "").lowercase()
         val trimmedSecondClue = secondClue.replace(" ", "").lowercase()

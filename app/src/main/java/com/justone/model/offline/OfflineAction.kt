@@ -6,7 +6,7 @@ sealed interface OfflineAction {
     data class SubmitClue(val clue: String) : OfflineAction
     object DeduplicateClue : OfflineAction
 
-    object HideWords : OfflineAction
+    data class SelectKeyword(val keyword: String) : OfflineAction
 }
 
 

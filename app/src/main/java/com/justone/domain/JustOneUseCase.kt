@@ -1,10 +1,10 @@
 package com.justone.domain
 
+import com.justone.data.JustOneRepository
+import com.justone.domain.utils.ClueUtils
 import com.justone.foundation.network.ResourceState
 import com.justone.foundation.network.onError
 import com.justone.foundation.network.onSuccess
-import com.justone.data.JustOneRepository
-import com.justone.domain.utils.ClueUtils
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -43,5 +43,8 @@ class JustOneUseCase @Inject constructor(
             }
     }
 
-    fun deduplicateClue(clues: List<String>) = ClueUtils.deduplicateClues(clues)
+    fun deduplicateClue(clues: List<String>, keyword: String): List<String> {
+        val validClues = ClueUtils.checkClueValidation(clues, keyword)
+        return ClueUtils.deduplicateClues(validClues)
+    }
 }

@@ -8,6 +8,7 @@ data class JustOneOnlineState(
     val keyword: String = "",
     val collectedClues: List<String> = emptyList(),
     val timer: Int,
+    val wordsNumber: Int,
     val isOnlineSetupFinished: Boolean = false,
     val playerList: List<String> = emptyList()
 )

@@ -31,10 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.justone.foundation.network.ResourceState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
+import com.justone.foundation.network.ResourceState
 import com.justone.model.offline.JustOneOfflineState
 import com.justone.model.offline.OfflineAction
 import com.justone.ui.theme.JustOneTheme
@@ -43,7 +43,7 @@ import com.justone.ui.theme.Secondary
 import com.justone.ui.widgets.DialogContainer
 
 @Composable
-fun WordsScreen(state: JustOneOfflineState, wordsNumber: Int) {
+fun WordsScreen(state: JustOneOfflineState) {
     val actor = LocalJustOneActor.current
     var clickedWord by remember { mutableStateOf("") }
     val (dialogState, setDialogState) = remember { mutableStateOf(DialogState.HIDE) }
@@ -59,7 +59,7 @@ fun WordsScreen(state: JustOneOfflineState, wordsNumber: Int) {
     val onClose = { setDialogState(DialogState.HIDE) }
     val onConfirm = {
         setDialogState(DialogState.CLUE)
-        actor(OfflineAction.HideWords)
+        actor(OfflineAction.SelectKeyword(clickedWord))
     }
     val onCountDownFinished = {
         setDialogState(DialogState.GUESS)
@@ -74,7 +74,7 @@ fun WordsScreen(state: JustOneOfflineState, wordsNumber: Int) {
         WordList(
             modifier = Modifier.padding(it),
             words = state.words,
-            wordsNumber = wordsNumber,
+            wordsNumber = state.wordsNumber,
             onWordClick = onWordClick
         )
     }
@@ -174,9 +174,10 @@ fun WordsScreenPreview() {
     val state = JustOneOfflineState(
         words = ResourceState.Success(words),
         translation = translation,
-        timer = 60
+        timer = 60,
+        wordsNumber = wordsNumber
     )
     JustOneTheme {
-        WordsScreen(state = state, wordsNumber)
+        WordsScreen(state = state)
     }
 }

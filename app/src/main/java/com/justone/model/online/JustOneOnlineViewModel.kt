@@ -1,9 +1,9 @@
 package com.justone.model.online
 
 import androidx.lifecycle.viewModelScope
-import com.justone.foundation.BaseViewModel
 import com.justone.domain.JustOneOnlineAdapter
 import com.justone.domain.JustOneUseCase
+import com.justone.foundation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -28,7 +28,7 @@ class JustOneOnlineViewModel @Inject constructor(
     }
 
     override fun configureInitState(): JustOneOnlineState {
-        return JustOneOnlineState(timer = useCase.countDownTimer)
+        return JustOneOnlineState(timer = useCase.countDownTimer, wordsNumber = useCase.wordsNumber)
     }
 
     override fun dispatch(action: OnlineAction) {
@@ -62,7 +62,7 @@ class JustOneOnlineViewModel @Inject constructor(
 
     private fun deduplicateClue() {
         val clues = state.collectedClues
-        updateState { copy(collectedClues = useCase.deduplicateClue(clues)) }
+        updateState { copy(collectedClues = useCase.deduplicateClue(clues, keyword)) }
     }
 
     private fun submitClue(clue: String) {

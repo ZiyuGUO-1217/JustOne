@@ -8,8 +8,8 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.justone.model.offline.OfflineAction
 import com.justone.model.offline.JustOneOfflineViewModel
+import com.justone.model.offline.OfflineAction
 
 val LocalJustOneActor = compositionLocalOf<(OfflineAction) -> Unit> {
     error("on JustOneActor provided")
@@ -21,8 +21,7 @@ fun OfflineScreen(navHostController: NavHostController) {
     val state by viewModel.flow.collectAsState()
 
     CompositionLocalProvider(LocalJustOneActor provides viewModel::dispatch) {
-        val wordsNumber = viewModel.useCase.wordsNumber
-        WordsScreen(state, wordsNumber)
+        WordsScreen(state)
     }
 
     BackHandler {
