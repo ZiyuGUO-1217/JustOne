@@ -6,22 +6,23 @@ import com.justone.domain.JustOneUseCase
 import com.justone.foundation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class JustOneOnlineViewModel @Inject constructor(
     private val useCase: JustOneUseCase,
-    private val onlineAdapter: JustOneOnlineAdapter,
+    private val onlineAdapter: JustOneOnlineAdapter
 ) : BaseViewModel<JustOneOnlineState, OnlineAction>() {
 
     init {
         viewModelScope.launch {
-            useCase.wordList.collect { wordList ->
+            useCase.wordList.collectLatest { wordList ->
                 updateState { copy(words = wordList) }
             }
         }
         viewModelScope.launch {
-            useCase.translation.collect { translation ->
+            useCase.translation.collectLatest { translation ->
                 updateState { copy(translation = translation) }
             }
         }

@@ -34,7 +34,7 @@ class JustOneUseCase @Inject constructor(
 
     suspend fun translateWord(word: String) {
         _translation.emit(ResourceState.Loading)
-        repository.translateWord(word)
+        repository.translateWord(word.lowercase())
             .onSuccess { result ->
                 _translation.emit(ResourceState.Success(result))
             }

@@ -6,6 +6,7 @@ import com.justone.foundation.BaseViewModel
 import com.justone.foundation.network.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -15,12 +16,12 @@ class JustOneOfflineViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            useCase.wordList.collect { wordList ->
+            useCase.wordList.collectLatest { wordList ->
                 updateState { copy(words = wordList) }
             }
         }
         viewModelScope.launch {
-            useCase.translation.collect { translation ->
+            useCase.translation.collectLatest { translation ->
                 updateState { copy(translation = translation) }
             }
         }
