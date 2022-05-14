@@ -14,6 +14,7 @@ class JustOneUseCase @Inject constructor(
 ) {
     val countDownTimer: Int = 120
     val wordsNumber: Int = 5
+    private val minimumPlayerNumber: Int = 2
 
     private val _wordList = MutableSharedFlow<ResourceState<List<String>>>()
     val wordList = _wordList.asSharedFlow()
@@ -47,4 +48,6 @@ class JustOneUseCase @Inject constructor(
         val validClues = ClueUtils.checkClueValidation(clues, keyword)
         return ClueUtils.deduplicateClues(validClues)
     }
+
+    fun isValidPlayerNumber(playerNumber: Int) = playerNumber >= minimumPlayerNumber
 }

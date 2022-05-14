@@ -20,7 +20,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +47,14 @@ import com.justone.ui.theme.Secondary
 @Composable
 fun WordsScreen(
     state: JustOneOfflineState,
+    scaffoldState: ScaffoldState,
     onGenerateClick: () -> Unit = {},
     onWordClick: (String) -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomGenerateButton(onGenerateClick) },
+        scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background
     ) {
         PlayersSetting(state.playersNumber)
@@ -171,6 +175,7 @@ private fun WordText(
 @Preview(showBackground = true)
 @Composable
 fun WordsScreenPreview() {
+    val scaffoldState = rememberScaffoldState()
     val words = listOf("Modifier", "Preview", "Composable", "Content", "background")
     val translation = ResourceState.Success("translation")
     val wordsNumber = words.size
@@ -181,6 +186,6 @@ fun WordsScreenPreview() {
         wordsNumber = wordsNumber
     )
     JustOneTheme {
-        WordsScreen(state = state)
+        WordsScreen(state = state, scaffoldState = scaffoldState)
     }
 }

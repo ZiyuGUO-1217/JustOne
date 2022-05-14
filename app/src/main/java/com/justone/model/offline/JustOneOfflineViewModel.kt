@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 
 sealed interface OfflineEvent {
     object ClueComplete : OfflineEvent
+    object InvalidPlayerNumber : OfflineEvent
 }
 
 @HiltViewModel
@@ -44,7 +45,14 @@ class JustOneOfflineViewModel @Inject constructor(
 
     override fun dispatch(action: OfflineAction) {
         when (action) {
-            OfflineAction.GenerateWords -> getRandomWords()
+            OfflineAction.GenerateWords -> {
+                cleanSubmittedClues()
+                if (useCase.isValidPlayerNumber(state.playersNumber)) {
+                    getRandomWords()
+                } else {
+                    sendEvent(OfflineEvent.InvalidPlayerNumber)
+                }
+            }
             is OfflineAction.TranslateWord -> translateWord(action.word)
             is OfflineAction.SelectKeyword -> onKeywordSelected(action.keyword)
             is OfflineAction.SubmitClue -> submitClue(action.clue)
@@ -55,7 +63,6 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     private fun getRandomWords() {
-        cleanSubmittedClues()
         viewModelScope.launch {
             useCase.getRandomWords()
         }
@@ -81,7 +88,7 @@ class JustOneOfflineViewModel @Inject constructor(
             .apply { add(inputClue) }
         updateState { copy(submittedClues = updatedClues) }
 
-        if (updatedClues.size == state.playersNumber) sendEvent(OfflineEvent.ClueComplete)
+        if (updatedClues.size == state.playersNumber - 1) sendEvent(OfflineEvent.ClueComplete)
     }
 
     private fun deduplicateClue() {
@@ -96,8 +103,10 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     private fun removePlayer() {
-        val currentPlayerNumber = state.playersNumber
-        if (currentPlayerNumber > 0) updateState { copy(playersNumber = currentPlayerNumber - 1) }
+        val updatePlayerNumber = state.playersNumber - 1
+        if (useCase.isValidPlayerNumber(updatePlayerNumber)) {
+            updateState { copy(playersNumber = updatePlayerNumber) }
+        }
     }
 
     private fun cleanSubmittedClues() {

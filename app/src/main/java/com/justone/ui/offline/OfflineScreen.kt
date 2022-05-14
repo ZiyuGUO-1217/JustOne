@@ -1,6 +1,8 @@
 package com.justone.ui.offline
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -30,9 +32,10 @@ fun OfflineScreen(navHostController: NavHostController) {
     val actor = viewModel::dispatch
 
     val (dialogState, setDialogState) = remember { mutableStateOf(DialogState.HIDE) }
+    val scaffoldState = rememberScaffoldState()
     var clickedWord by remember { mutableStateOf("") }
 
-    UiEffects(viewModel, setDialogState)
+    UiEffects(viewModel, setDialogState, scaffoldState)
 
     val onGenerateClick = {
         if (state.words != ResourceState.Loading) actor(OfflineAction.GenerateWords)
@@ -53,7 +56,7 @@ fun OfflineScreen(navHostController: NavHostController) {
     }
 
     CompositionLocalProvider(LocalJustOneActor provides actor) {
-        WordsScreen(state, onGenerateClick, onWordClick)
+        WordsScreen(state, scaffoldState, onGenerateClick, onWordClick)
 
         if (dialogState != DialogState.HIDE) {
             DialogContainer(onClose) { dialogWidth ->
@@ -76,12 +79,16 @@ fun OfflineScreen(navHostController: NavHostController) {
 @Composable
 private fun UiEffects(
     viewModel: JustOneOfflineViewModel,
-    setDialogState: (DialogState) -> Unit
+    setDialogState: (DialogState) -> Unit,
+    scaffoldState: ScaffoldState
 ) {
     LaunchedEffect(Unit) {
         viewModel.events.collectLatest { event ->
             when (event) {
                 OfflineEvent.ClueComplete -> setDialogState(DialogState.GUESS)
+                OfflineEvent.InvalidPlayerNumber -> {
+                    scaffoldState.snackbarHostState.showSnackbar("Please add at least 2 player")
+                }
             }
         }
     }
