@@ -51,7 +51,7 @@ class JustOneOnlineViewModel @Inject constructor(
 
     private fun getRandomWords() {
         viewModelScope.launch {
-            useCase.getRandomWords(useCase.wordsNumber)
+            useCase.getRandomWords()
         }
     }
 

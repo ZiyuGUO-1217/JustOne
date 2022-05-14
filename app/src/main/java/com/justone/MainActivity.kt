@@ -5,14 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.justone.ui.HomeScreen
 import com.justone.ui.JustOneScreenRoute
 import com.justone.ui.offline.OfflineScreen
 import com.justone.ui.online.OnlineScreen
 import com.justone.ui.theme.JustOneTheme
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +31,7 @@ class MainActivity : ComponentActivity() {
     private fun Content() {
         val navHostController = rememberAnimatedNavController()
         val startDestination = JustOneScreenRoute.Setup.route
+
         AnimatedNavHost(navController = navHostController, startDestination = startDestination) {
             composable(route = JustOneScreenRoute.Setup.route) {
                 HomeScreen(navHostController = navHostController)

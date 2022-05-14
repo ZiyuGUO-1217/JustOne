@@ -5,6 +5,8 @@ sealed interface OfflineAction {
     data class TranslateWord(val word: String) : OfflineAction
     data class SubmitClue(val clue: String) : OfflineAction
     object DeduplicateClue : OfflineAction
+    object AddPlayer : OfflineAction
+    object RemovePlayer : OfflineAction
 
     data class SelectKeyword(val keyword: String) : OfflineAction
 }

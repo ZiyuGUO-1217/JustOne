@@ -6,13 +6,21 @@ import com.justone.foundation.BaseViewModel
 import com.justone.foundation.network.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
+sealed interface OfflineEvent {
+    object ClueComplete : OfflineEvent
+}
 
 @HiltViewModel
 class JustOneOfflineViewModel @Inject constructor(
     private val useCase: JustOneUseCase,
 ) : BaseViewModel<JustOneOfflineState, OfflineAction>() {
+    private val _events = MutableSharedFlow<OfflineEvent>()
+    val events = _events.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -29,8 +37,8 @@ class JustOneOfflineViewModel @Inject constructor(
 
     override fun configureInitState(): JustOneOfflineState {
         return JustOneOfflineState(
-            timer = useCase.countDownTimer,
-            wordsNumber = useCase.wordsNumber
+            wordsNumber = useCase.wordsNumber,
+            timer = useCase.countDownTimer
         )
     }
 
@@ -41,12 +49,15 @@ class JustOneOfflineViewModel @Inject constructor(
             is OfflineAction.SelectKeyword -> onKeywordSelected(action.keyword)
             is OfflineAction.SubmitClue -> submitClue(action.clue)
             OfflineAction.DeduplicateClue -> deduplicateClue()
+            OfflineAction.AddPlayer -> addPlayer()
+            OfflineAction.RemovePlayer -> removePlayer()
         }
     }
 
     private fun getRandomWords() {
+        cleanSubmittedClues()
         viewModelScope.launch {
-            useCase.getRandomWords(useCase.wordsNumber)
+            useCase.getRandomWords()
         }
     }
 
@@ -69,11 +80,33 @@ class JustOneOfflineViewModel @Inject constructor(
         val updatedClues = state.submittedClues.toMutableList()
             .apply { add(inputClue) }
         updateState { copy(submittedClues = updatedClues) }
+
+        if (updatedClues.size == state.playersNumber) sendEvent(OfflineEvent.ClueComplete)
     }
 
     private fun deduplicateClue() {
         updateState {
             copy(submittedClues = useCase.deduplicateClue(state.submittedClues, state.keyword))
+        }
+    }
+
+    private fun addPlayer() {
+        val currentPlayerNumber = state.playersNumber
+        updateState { copy(playersNumber = currentPlayerNumber + 1) }
+    }
+
+    private fun removePlayer() {
+        val currentPlayerNumber = state.playersNumber
+        if (currentPlayerNumber > 0) updateState { copy(playersNumber = currentPlayerNumber - 1) }
+    }
+
+    private fun cleanSubmittedClues() {
+        updateState { copy(submittedClues = emptyList()) }
+    }
+
+    private fun sendEvent(event: OfflineEvent) {
+        viewModelScope.launch {
+            _events.emit(event)
         }
     }
 }

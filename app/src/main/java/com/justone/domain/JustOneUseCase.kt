@@ -21,7 +21,7 @@ class JustOneUseCase @Inject constructor(
     private val _translation = MutableSharedFlow<ResourceState<String>>()
     val translation = _translation.asSharedFlow()
 
-    suspend fun getRandomWords(wordsNumber: Int) {
+    suspend fun getRandomWords() {
         _wordList.emit(ResourceState.Loading)
         repository.getRandomWordList(wordsNumber)
             .onSuccess { wordList ->

@@ -8,5 +8,6 @@ data class JustOneOfflineState(
     val keyword: String = "",
     val wordsNumber: Int,
     val submittedClues: List<String> = emptyList(),
-    val timer: Int
+    val timer: Int,
+    val playersNumber: Int = 0
 )
