@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,28 +14,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.justone.model.offline.OfflineAction
-import com.justone.ui.widgets.CountDownTimer
 import com.justone.ui.widgets.FilledButton
 import com.justone.ui.widgets.TextInputField
 
 @Composable
 fun CluePreparing(
-    dialogWidth: Int,
-    timer: Int,
-    onCountDownFinished: () -> Unit
+    playersNumber: Int,
+    submittedClues: List<String>,
 ) {
     val actor = LocalJustOneActor.current
     var inputClue by remember { mutableStateOf("") }
-    val onSubmit: (String) -> Unit = { clue -> actor(OfflineAction.SubmitClue(clue)) }
+    val onSubmit = { clue: String -> actor(OfflineAction.SubmitClue(clue)) }
+    val leftCluesNumber = (playersNumber - 1) - submittedClues.size
 
-    CountDownTimer(timer, dialogWidth, onCountDownFinished)
+    Text(text = "Left clues: $leftCluesNumber")
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp)
             .fillMaxWidth()
     ) {
         val modifier = Modifier.weight(1f)
-        TextInputField(modifier, inputClue) {
+        TextInputField(modifier, inputClue, "Input your clue here") {
             inputClue = it.replace('\n', ' ')
         }
         Spacer(modifier = Modifier.width(8.dp))

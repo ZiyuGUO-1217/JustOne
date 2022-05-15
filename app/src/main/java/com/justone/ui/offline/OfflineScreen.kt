@@ -18,6 +18,7 @@ import com.justone.foundation.network.ResourceState
 import com.justone.model.offline.JustOneOfflineViewModel
 import com.justone.model.offline.OfflineAction
 import com.justone.model.offline.OfflineEvent
+import com.justone.ui.widgets.CountDownTimer
 import com.justone.ui.widgets.DialogContainer
 import kotlinx.coroutines.flow.collectLatest
 
@@ -63,7 +64,11 @@ fun OfflineScreen(navHostController: NavHostController) {
                 when (dialogState) {
                     DialogState.HIDE -> {}
                     DialogState.WORD -> WordShowing(dialogWidth, clickedWord, state.translation, onClose, onConfirm)
-                    DialogState.CLUE -> CluePreparing(dialogWidth, state.timer, onCountDownFinished)
+                    DialogState.CLUE -> {
+                        // no need to trigger the recomposition of CountDownTimer while state.submittedClues changed
+                        CountDownTimer(state.timer, dialogWidth, onCountDownFinished)
+                        CluePreparing(state.playersNumber, state.submittedClues)
+                    }
                     DialogState.GUESS -> ClueShowing(dialogWidth, state.submittedClues, setDialogState)
                 }
             }
@@ -82,10 +87,14 @@ private fun UiEffects(
     setDialogState: (DialogState) -> Unit,
     scaffoldState: ScaffoldState
 ) {
+    val actor = viewModel::dispatch
     LaunchedEffect(Unit) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                OfflineEvent.ClueComplete -> setDialogState(DialogState.GUESS)
+                OfflineEvent.ClueComplete -> {
+                    setDialogState(DialogState.GUESS)
+                    actor(OfflineAction.DeduplicateClue)
+                }
                 OfflineEvent.InvalidPlayerNumber -> {
                     scaffoldState.snackbarHostState.showSnackbar("Please add at least 2 player")
                 }

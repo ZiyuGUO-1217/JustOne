@@ -33,11 +33,11 @@ fun SetupDialog(onClose: () -> Unit) {
                 .padding(horizontal = 32.dp)
                 .fillMaxWidth()
         ) {
-            TextInputField(Modifier.weight(1f), roomId) {
+            TextInputField(Modifier.weight(1f), roomId, "Room Id") {
                 roomId = it
             }
             Spacer(modifier = Modifier.width(8.dp))
-            TextInputField(Modifier.weight(1f), playerId) {
+            TextInputField(Modifier.weight(1f), playerId, "Your player Id") {
                 playerId = it
             }
             Spacer(modifier = Modifier.width(8.dp))

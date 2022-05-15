@@ -1,6 +1,7 @@
 package com.justone.ui.widgets
 
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,12 +14,18 @@ import com.justone.ui.theme.Secondary
 import com.justone.ui.theme.SecondaryDark
 
 @Composable
-fun TextInputField(modifier: Modifier, inputClue: String, onValueChange: (String) -> Unit) {
+fun TextInputField(
+    modifier: Modifier,
+    inputClue: String,
+    placeHolder: String? = null,
+    onValueChange: (String) -> Unit
+) {
     OutlinedTextField(
         value = inputClue,
         onValueChange = onValueChange,
         modifier = modifier,
         textStyle = TextStyle(color = PrimaryDark, fontSize = 24.sp, fontWeight = FontWeight.Bold),
+        placeholder = { placeHolder?.let { Text(text = it) } },
         singleLine = true,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             backgroundColor = Color.Transparent,

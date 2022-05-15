@@ -44,7 +44,7 @@ fun ClueShowing(dialogWidth: Int, clues: List<String>, setDialogState: (DialogSt
             .fillMaxWidth()
     ) {
         val modifier = Modifier.weight(1f)
-        TextInputField(modifier, inputAnswer) {
+        TextInputField(modifier, inputAnswer, "Submit your answer here") {
             inputAnswer = it.replace('\n', ' ')
         }
         Spacer(modifier = Modifier.width(8.dp))
