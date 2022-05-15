@@ -15,17 +15,19 @@ import com.justone.ui.theme.SecondaryDark
 
 @Composable
 fun TextInputField(
-    modifier: Modifier,
-    inputClue: String,
+    modifier: Modifier = Modifier,
+    inputValue: String,
     placeHolder: String? = null,
+    label: String? = null,
     onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
-        value = inputClue,
+        value = inputValue,
         onValueChange = onValueChange,
         modifier = modifier,
         textStyle = TextStyle(color = PrimaryDark, fontSize = 24.sp, fontWeight = FontWeight.Bold),
         placeholder = { placeHolder?.let { Text(text = it) } },
+        label = { label?.let { Text(text = it) } },
         singleLine = true,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             backgroundColor = Color.Transparent,

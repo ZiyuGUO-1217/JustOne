@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -36,10 +38,22 @@ class MainActivity : ComponentActivity() {
             composable(route = JustOneScreenRoute.Setup.route) {
                 HomeScreen(navHostController = navHostController)
             }
-            composable(route = JustOneScreenRoute.Offline.route) {
+            composable(
+                route = JustOneScreenRoute.Offline.route,
+                arguments = listOf(
+                    navArgument(JustOneScreenRoute.Offline.KEY_CLUE_TIMER) { type = NavType.IntType },
+                    navArgument(JustOneScreenRoute.Offline.KEY_GUESS_TIMER) { type = NavType.IntType }
+                )
+            ) {
                 OfflineScreen(navHostController = navHostController)
             }
-            composable(route = JustOneScreenRoute.Online.route) {
+            composable(
+                route = JustOneScreenRoute.Online.route,
+                arguments = listOf(
+                    navArgument(JustOneScreenRoute.Online.KEY_CLUE_TIMER) { type = NavType.IntType },
+                    navArgument(JustOneScreenRoute.Online.KEY_GUESS_TIMER) { type = NavType.IntType }
+                )
+            ) {
                 OnlineScreen(navHostController = navHostController)
             }
         }

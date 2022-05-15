@@ -19,8 +19,10 @@ val LocalOnlineActor = compositionLocalOf<(OnlineAction) -> Unit> {
 }
 
 @Composable
-fun OnlineScreen(navHostController: NavHostController) {
-    val viewModel: JustOneOnlineViewModel = hiltViewModel()
+fun OnlineScreen(
+    navHostController: NavHostController,
+    viewModel: JustOneOnlineViewModel = hiltViewModel()
+) {
     val state by viewModel.flow.collectAsState()
 
     CompositionLocalProvider(LocalOnlineActor provides viewModel::dispatch) {

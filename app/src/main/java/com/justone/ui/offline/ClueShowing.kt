@@ -41,7 +41,8 @@ fun ClueShowing(dialogWidth: Int, clues: List<String>, setDialogState: (DialogSt
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         val modifier = Modifier.weight(1f)
         TextInputField(modifier, inputAnswer, "Submit your answer here") {

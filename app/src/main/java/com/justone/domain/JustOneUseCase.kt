@@ -12,9 +12,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 class JustOneUseCase @Inject constructor(
     private val repository: JustOneRepository
 ) {
-    val countDownTimer: Int = 120
-    val wordsNumber: Int = 5
-    private val minimumPlayerNumber: Int = 2
+    companion object {
+        const val DEFAULT_CLUE_TIMER: Int = 120
+        const val DEFAULT_GUESS_TIMER: Int = 90
+        const val WORDS_NUMBER: Int = 5
+        const val MINIMUM_PLAYER_NUMBER: Int = 2
+    }
 
     private val _wordList = MutableSharedFlow<ResourceState<List<String>>>()
     val wordList = _wordList.asSharedFlow()
@@ -24,7 +27,7 @@ class JustOneUseCase @Inject constructor(
 
     suspend fun getRandomWords() {
         _wordList.emit(ResourceState.Loading)
-        repository.getRandomWordList(wordsNumber)
+        repository.getRandomWordList(WORDS_NUMBER)
             .onSuccess { wordList ->
                 _wordList.emit(ResourceState.Success(wordList))
             }
@@ -49,5 +52,5 @@ class JustOneUseCase @Inject constructor(
         return ClueUtils.deduplicateClues(validClues)
     }
 
-    fun isValidPlayerNumber(playerNumber: Int) = playerNumber >= minimumPlayerNumber
+    fun isValidPlayerNumber(playerNumber: Int) = playerNumber >= MINIMUM_PLAYER_NUMBER
 }

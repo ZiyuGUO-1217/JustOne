@@ -182,7 +182,8 @@ fun WordsScreenPreview() {
     val state = JustOneOfflineState(
         words = ResourceState.Success(words),
         translation = translation,
-        timer = 60,
+        clueTimer = 60,
+        guessTimer = 60,
         wordsNumber = wordsNumber
     )
     JustOneTheme {

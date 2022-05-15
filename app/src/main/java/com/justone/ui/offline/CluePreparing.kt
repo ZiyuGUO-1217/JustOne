@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.justone.model.offline.OfflineAction
@@ -31,7 +32,8 @@ fun CluePreparing(
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         val modifier = Modifier.weight(1f)
         TextInputField(modifier, inputClue, "Input your clue here") {

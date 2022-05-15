@@ -27,8 +27,10 @@ val LocalJustOneActor = compositionLocalOf<(OfflineAction) -> Unit> {
 }
 
 @Composable
-fun OfflineScreen(navHostController: NavHostController) {
-    val viewModel: JustOneOfflineViewModel = hiltViewModel()
+fun OfflineScreen(
+    navHostController: NavHostController,
+    viewModel: JustOneOfflineViewModel = hiltViewModel()
+) {
     val state by viewModel.flow.collectAsState()
     val actor = viewModel::dispatch
 
@@ -41,10 +43,10 @@ fun OfflineScreen(navHostController: NavHostController) {
     val onGenerateClick = {
         if (state.words != ResourceState.Loading) actor(OfflineAction.GenerateWords)
     }
-    val onWordClick: (String) -> Unit = {
+    val onWordClick = { word: String ->
         setDialogState(DialogState.WORD)
-        actor(OfflineAction.TranslateWord(it))
-        clickedWord = it
+        actor(OfflineAction.TranslateWord(word))
+        clickedWord = word
     }
     val onClose = { setDialogState(DialogState.HIDE) }
     val onConfirm = {
@@ -65,8 +67,8 @@ fun OfflineScreen(navHostController: NavHostController) {
                     DialogState.HIDE -> {}
                     DialogState.WORD -> WordShowing(dialogWidth, clickedWord, state.translation, onClose, onConfirm)
                     DialogState.CLUE -> {
-                        // no need to trigger the recomposition of CountDownTimer while state.submittedClues changed
-                        CountDownTimer(state.timer, dialogWidth, onCountDownFinished)
+                        // no need to trigger the recomposition of CountDownTimer when state.submittedClues changed
+                        CountDownTimer(state.clueTimer, dialogWidth, onCountDownFinished)
                         CluePreparing(state.playersNumber, state.submittedClues)
                     }
                     DialogState.GUESS -> ClueShowing(dialogWidth, state.submittedClues, setDialogState)

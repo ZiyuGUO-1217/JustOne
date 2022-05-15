@@ -1,9 +1,11 @@
 package com.justone.model.offline
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.justone.domain.JustOneUseCase
 import com.justone.foundation.BaseViewModel
 import com.justone.foundation.network.ResourceState
+import com.justone.ui.JustOneScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +20,8 @@ sealed interface OfflineEvent {
 
 @HiltViewModel
 class JustOneOfflineViewModel @Inject constructor(
-    private val useCase: JustOneUseCase,
+    private val savedStateHandle: SavedStateHandle,
+    private val useCase: JustOneUseCase
 ) : BaseViewModel<JustOneOfflineState, OfflineAction>() {
     private val _events = MutableSharedFlow<OfflineEvent>()
     val events = _events.asSharedFlow()
@@ -37,9 +40,12 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     override fun configureInitState(): JustOneOfflineState {
+        val clueTimer = savedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_CLUE_TIMER)
+        val guessTimer = savedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_GUESS_TIMER)
         return JustOneOfflineState(
-            wordsNumber = useCase.wordsNumber,
-            timer = useCase.countDownTimer
+            wordsNumber = JustOneUseCase.WORDS_NUMBER,
+            clueTimer = clueTimer ?: JustOneUseCase.DEFAULT_CLUE_TIMER,
+            guessTimer = guessTimer ?: JustOneUseCase.DEFAULT_GUESS_TIMER
         )
     }
 

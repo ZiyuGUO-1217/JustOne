@@ -1,9 +1,11 @@
 package com.justone.model.offline
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.justone.MainCoroutineRule
 import com.justone.domain.JustOneUseCase
 import com.justone.foundation.network.ResourceState
+import com.justone.ui.JustOneScreenRoute
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -15,6 +17,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class JustOneOfflineViewModelTest {
+    private val mockSavedStateHandle = mockk<SavedStateHandle>(relaxed = true)
     private val mockUseCase = mockk<JustOneUseCase>(relaxed = true)
     private lateinit var viewModel: JustOneOfflineViewModel
 
@@ -23,7 +26,10 @@ class JustOneOfflineViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = JustOneOfflineViewModel(mockUseCase)
+        every { mockSavedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_CLUE_TIMER) } returns 120
+        every { mockSavedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_GUESS_TIMER) } returns 90
+        
+        viewModel = JustOneOfflineViewModel(mockSavedStateHandle, mockUseCase)
     }
 
     @Test
