@@ -68,7 +68,7 @@ fun WordShowing(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = "Drop this", fontSize = 32.sp, modifier = Modifier.clickable { onClose() })
-        FilledButton("Confirm", onConfirm)
+        FilledButton("Confirm") { onConfirm() }
     }
 }
 

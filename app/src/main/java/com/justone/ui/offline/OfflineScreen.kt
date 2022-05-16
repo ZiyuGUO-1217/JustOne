@@ -15,9 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.justone.foundation.network.ResourceState
-import com.justone.model.offline.JustOneOfflineViewModel
-import com.justone.model.offline.OfflineAction
-import com.justone.model.offline.OfflineEvent
 import com.justone.ui.widgets.CountDownTimer
 import com.justone.ui.widgets.DialogContainer
 import kotlinx.coroutines.flow.collectLatest

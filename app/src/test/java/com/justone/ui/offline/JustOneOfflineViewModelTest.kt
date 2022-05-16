@@ -1,4 +1,4 @@
-package com.justone.model.offline
+package com.justone.ui.offline
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
@@ -36,7 +36,7 @@ class JustOneOfflineViewModelTest {
     fun givenZeroPlayerNumber_whenRemovePlayer_thenPlayerNumberShouldBeZero() {
         viewModel.dispatch(OfflineAction.RemovePlayer)
 
-        viewModel.state.playersNumber shouldBe 0
+        viewModel.flow.value.playersNumber shouldBe 0
     }
 
     @Test
@@ -61,7 +61,7 @@ class JustOneOfflineViewModelTest {
             viewModel.dispatch(OfflineAction.GenerateWords)
 
             awaitItem() shouldBe OfflineEvent.InvalidPlayerNumber
-            viewModel.state.words shouldBe ResourceState.Empty
+            viewModel.flow.value.words shouldBe ResourceState.Empty
         }
     }
 }

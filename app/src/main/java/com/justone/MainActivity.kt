@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.justone.ui.HomeScreen
+import com.justone.ui.home.HomeScreen
 import com.justone.ui.JustOneScreenRoute
 import com.justone.ui.offline.OfflineScreen
 import com.justone.ui.online.OnlineScreen

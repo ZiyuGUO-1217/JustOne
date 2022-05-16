@@ -1,4 +1,4 @@
-package com.justone.model.online
+package com.justone.ui.online
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope

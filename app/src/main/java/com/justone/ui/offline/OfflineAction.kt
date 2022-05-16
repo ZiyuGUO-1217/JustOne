@@ -1,4 +1,4 @@
-package com.justone.model.offline
+package com.justone.ui.offline
 
 sealed interface OfflineAction {
     object GenerateWords : OfflineAction

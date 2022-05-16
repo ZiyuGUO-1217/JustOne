@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.justone.model.online.OnlineAction
 import com.justone.ui.widgets.DialogContainer
 import com.justone.ui.widgets.FilledButton
 import com.justone.ui.widgets.TextInputField
@@ -41,7 +40,7 @@ fun SetupDialog(onClose: () -> Unit) {
                 playerId = it
             }
             Spacer(modifier = Modifier.width(8.dp))
-            FilledButton(text = "Submit", onSetupClick)
+            FilledButton(text = "Submit") { onSetupClick() }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.justone.model.online
+package com.justone.ui.online
 
 sealed interface OnlineAction {
     object GenerateWords : OnlineAction

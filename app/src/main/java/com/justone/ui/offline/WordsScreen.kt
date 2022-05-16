@@ -38,8 +38,6 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 import com.justone.R
 import com.justone.foundation.network.ResourceState
-import com.justone.model.offline.JustOneOfflineState
-import com.justone.model.offline.OfflineAction
 import com.justone.ui.theme.JustOneTheme
 import com.justone.ui.theme.Primary
 import com.justone.ui.theme.Secondary

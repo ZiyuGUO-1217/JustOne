@@ -1,4 +1,4 @@
-package com.justone.model.offline
+package com.justone.ui.offline
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope

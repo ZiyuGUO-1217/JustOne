@@ -1,14 +1,15 @@
-package com.justone.model.offline
+package com.justone.ui.online
 
 import com.justone.foundation.network.ResourceState
 
-data class JustOneOfflineState(
+data class JustOneOnlineState(
     val words: ResourceState<List<String>> = ResourceState.Empty,
     val translation: ResourceState<String> = ResourceState.Loading,
     val keyword: String = "",
-    val wordsNumber: Int,
-    val submittedClues: List<String> = emptyList(),
+    val collectedClues: List<String> = emptyList(),
     val clueTimer: Int,
     val guessTimer: Int,
-    val playersNumber: Int = 0
+    val wordsNumber: Int,
+    val isOnlineSetupFinished: Boolean = false,
+    val playerList: List<String> = emptyList()
 )

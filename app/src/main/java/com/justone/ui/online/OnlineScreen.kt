@@ -11,8 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.justone.model.online.JustOneOnlineViewModel
-import com.justone.model.online.OnlineAction
 
 val LocalOnlineActor = compositionLocalOf<(OnlineAction) -> Unit> {
     error("on JustOneActor provided")

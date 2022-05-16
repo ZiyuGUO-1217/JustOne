@@ -9,13 +9,14 @@ import androidx.compose.ui.unit.sp
 import com.justone.ui.theme.Primary
 
 @Composable
-fun FilledButton(text: String, onConfirm: () -> Unit) {
+fun FilledButton(text: String, isEnable: Boolean = true, onConfirm: () -> Unit) {
+    val colors = ButtonDefaults.buttonColors(
+        backgroundColor = if (isEnable) Primary else Color.LightGray,
+        contentColor = Color.White
+    )
     Button(
-        onClick = { onConfirm() },
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Primary,
-            contentColor = Color.White
-        ),
+        onClick = { if (isEnable) onConfirm() },
+        colors = colors,
     ) {
         Text(text = text, fontSize = 32.sp)
     }
