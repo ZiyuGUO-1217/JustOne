@@ -5,6 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 
 @Composable
-fun <S, A> BaseViewModel<S, A>.collectAsState(): State<S> {
+fun <S, A, E> BaseViewModel<S, A, E>.collectAsState(): State<S> {
     return flow.collectAsState()
 }

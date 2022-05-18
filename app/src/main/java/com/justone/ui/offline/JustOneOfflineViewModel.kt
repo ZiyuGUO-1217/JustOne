@@ -8,8 +8,6 @@ import com.justone.foundation.network.ResourceState
 import com.justone.ui.JustOneScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -22,9 +20,7 @@ sealed interface OfflineEvent {
 class JustOneOfflineViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val useCase: JustOneUseCase
-) : BaseViewModel<JustOneOfflineState, OfflineAction>() {
-    private val _events = MutableSharedFlow<OfflineEvent>()
-    val events = _events.asSharedFlow()
+) : BaseViewModel<JustOneOfflineState, OfflineAction, OfflineEvent>() {
 
     init {
         viewModelScope.launch {
@@ -117,11 +113,5 @@ class JustOneOfflineViewModel @Inject constructor(
 
     private fun cleanSubmittedClues() {
         updateState { copy(submittedClues = emptyList()) }
-    }
-
-    private fun sendEvent(event: OfflineEvent) {
-        viewModelScope.launch {
-            _events.emit(event)
-        }
     }
 }

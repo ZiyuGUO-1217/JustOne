@@ -8,8 +8,6 @@ import com.justone.foundation.BaseViewModel
 import com.justone.ui.JustOneScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -22,9 +20,7 @@ class JustOneOnlineViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val useCase: JustOneUseCase,
     private val onlineAdapter: JustOneOnlineAdapter
-) : BaseViewModel<JustOneOnlineState, OnlineAction>() {
-    private val _events = MutableSharedFlow<OnlineEvent>()
-    val events = _events.asSharedFlow()
+) : BaseViewModel<JustOneOnlineState, OnlineAction, OnlineEvent>() {
 
     init {
         viewModelScope.launch {
@@ -90,11 +86,5 @@ class JustOneOnlineViewModel @Inject constructor(
     }
 
     private fun submitClue(clue: String) {
-    }
-
-    private fun sendEvent(event: OnlineEvent) {
-        viewModelScope.launch {
-            _events.emit(event)
-        }
     }
 }

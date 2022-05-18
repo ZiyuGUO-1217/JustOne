@@ -1,13 +1,9 @@
 package com.justone.ui.home
 
-import androidx.lifecycle.viewModelScope
 import com.justone.domain.JustOneUseCase
 import com.justone.foundation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 
 sealed interface HomeAction {
     data class UpdateClueTimer(val timer: String) : HomeAction
@@ -24,9 +20,7 @@ sealed interface HomeEvent {
 }
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeAction>() {
-    private val _event = MutableSharedFlow<HomeEvent>()
-    val event = _event.asSharedFlow()
+class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeAction, HomeEvent>() {
 
     override fun configureInitState(): HomeState {
         return HomeState(
@@ -73,12 +67,6 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeAction>
             onValidationSuccess(clueTimer, guessTimer)
         } else {
             onValidationFail()
-        }
-    }
-
-    private fun sendEvent(event: HomeEvent) {
-        viewModelScope.launch {
-            _event.emit(event)
         }
     }
 }
