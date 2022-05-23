@@ -39,4 +39,4 @@ jobs:
         with:
           name: artifacts
           path: |
-            app/build/intermediates/apk/debug/app-debug.apk
+            app/build/outputs/apk/debug/app-debug.apk
