@@ -119,7 +119,7 @@ private fun isValidTimer(timer: String) = with(timer.trim()) {
 @Composable
 private fun UiEffects(viewModel: HomeViewModel, navHostController: NavHostController, scaffoldState: ScaffoldState) {
     LaunchedEffect(Unit) {
-        viewModel.event.collectLatest { event: HomeEvent ->
+        viewModel.events.collectLatest { event: HomeEvent ->
             when (event) {
                 is HomeEvent.NavigateToOfflineScreen -> {
                     JustOneScreenRoute.Offline.navigate(

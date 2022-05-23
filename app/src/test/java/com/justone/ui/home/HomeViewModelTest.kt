@@ -26,7 +26,7 @@ class HomeViewModelTest {
         viewModel.dispatch(HomeAction.UpdateClueTimer(" 120 "))
         viewModel.dispatch(HomeAction.UpdateGuessTimer("090"))
 
-        viewModel.event.test {
+        viewModel.events.test {
             viewModel.dispatch(HomeAction.NavigateToOfflineScreen)
 
             awaitItem() shouldBe HomeEvent.NavigateToOfflineScreen(120, 90)
@@ -38,7 +38,7 @@ class HomeViewModelTest {
         viewModel.dispatch(HomeAction.UpdateClueTimer(" 00120 "))
         viewModel.dispatch(HomeAction.UpdateGuessTimer("090"))
 
-        viewModel.event.test {
+        viewModel.events.test {
             viewModel.dispatch(HomeAction.NavigateToOnlineScreen)
 
             awaitItem() shouldBe HomeEvent.NavigateToOnlineScreen(120, 90)
@@ -50,7 +50,7 @@ class HomeViewModelTest {
         viewModel.dispatch(HomeAction.UpdateClueTimer(" 120 "))
         viewModel.dispatch(HomeAction.UpdateGuessTimer("0"))
 
-        viewModel.event.test {
+        viewModel.events.test {
             viewModel.dispatch(HomeAction.NavigateToOfflineScreen)
 
             awaitItem() shouldBe HomeEvent.ValidationFailed
@@ -62,7 +62,7 @@ class HomeViewModelTest {
         viewModel.dispatch(HomeAction.UpdateClueTimer(" 000 "))
         viewModel.dispatch(HomeAction.UpdateGuessTimer("090"))
 
-        viewModel.event.test {
+        viewModel.events.test {
             viewModel.dispatch(HomeAction.NavigateToOnlineScreen)
 
             awaitItem() shouldBe HomeEvent.ValidationFailed

@@ -12,8 +12,8 @@ abstract class BaseViewModel<S, A, E> : ViewModel() {
     protected abstract fun configureInitState(): S
     abstract fun dispatch(action: A)
 
-    private val _event = MutableSharedFlow<E>()
-    val event = _event.asSharedFlow()
+    private val _events = MutableSharedFlow<E>()
+    val events = _events.asSharedFlow()
 
     private val _flow by lazy {
         MutableStateFlow(configureInitState())
@@ -35,7 +35,7 @@ abstract class BaseViewModel<S, A, E> : ViewModel() {
 
     protected fun sendEvent(event: E) {
         viewModelScope.launch {
-            _event.emit(event)
+            _events.emit(event)
         }
     }
 }

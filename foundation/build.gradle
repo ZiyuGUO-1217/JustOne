@@ -18,8 +18,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField "String", "API_KEY", "\"${properties.getProperty('API_Key')}\""
-        buildConfigField "String", "TRANSLATION_API_KEY", "\"${properties.getProperty('TRANSLATION_API_KEY')}\""
+        buildConfigField "String", "API_KEY", "\"${properties.getProperty('API_Key')}\"" ?: System.getenv("pictionaryKey")
+        buildConfigField "String", "TRANSLATION_API_KEY", "\"${properties.getProperty('TRANSLATION_API_KEY')}\"" ?: System.getenv("translationKey")
     }
 
     buildTypes {
