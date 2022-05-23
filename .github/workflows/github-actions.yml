@@ -6,7 +6,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     env:
       pictionaryKey: ${{ secrets.PICTIONARY_API_KEY }}
@@ -28,10 +28,6 @@ jobs:
           chmod +x gradlew
           touch local.properties
 
-#      - name: Detekt - check the code style
-#        run: ./gradlew detekt
-#      - name: Run all unit tests
-#        run: ./gradlew testDebugUnitTest
       - name: Build with Gradle
         run: ./gradlew assembleDebug
       - name: Archive outputs
