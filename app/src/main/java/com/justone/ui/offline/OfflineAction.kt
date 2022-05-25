@@ -7,6 +7,7 @@ sealed interface OfflineAction {
     object DeduplicateClue : OfflineAction
     object AddPlayer : OfflineAction
     object RemovePlayer : OfflineAction
+    data class CheckAnswer(val guess: String) : OfflineAction
 
     data class SelectKeyword(val keyword: String) : OfflineAction
 }

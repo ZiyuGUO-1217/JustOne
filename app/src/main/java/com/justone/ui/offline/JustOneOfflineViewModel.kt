@@ -61,6 +61,13 @@ class JustOneOfflineViewModel @Inject constructor(
             OfflineAction.DeduplicateClue -> deduplicateClue()
             OfflineAction.AddPlayer -> addPlayer()
             OfflineAction.RemovePlayer -> removePlayer()
+            is OfflineAction.CheckAnswer -> checkAnswer(action.guess)
+        }
+    }
+
+    private fun checkAnswer(guess: String) {
+        updateState {
+            copy(isAnswerCorrect = useCase.checkAnswer(state.keyword, guess))
         }
     }
 

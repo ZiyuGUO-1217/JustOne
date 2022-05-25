@@ -10,5 +10,6 @@ data class JustOneOfflineState(
     val submittedClues: List<String> = emptyList(),
     val clueTimer: Int,
     val guessTimer: Int,
-    val playersNumber: Int = 0
+    val playersNumber: Int = 0,
+    val isAnswerCorrect: Boolean = false
 )

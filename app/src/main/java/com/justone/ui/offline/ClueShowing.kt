@@ -25,8 +25,12 @@ import com.justone.ui.widgets.TextInputField
 
 @Composable
 fun ClueShowing(dialogWidth: Int, clues: List<String>, setDialogState: (DialogState) -> Unit) {
+    val actor = LocalJustOneActor.current
     var inputAnswer by remember { mutableStateOf("") }
-    val onSubmit: (String) -> Unit = { setDialogState(DialogState.HIDE) }
+    val onSubmit: (String) -> Unit = {
+        setDialogState(DialogState.RESULT)
+        actor(OfflineAction.CheckAnswer(it))
+    }
 
     val size = with(LocalDensity.current) { dialogWidth.toDp() }
     Column(

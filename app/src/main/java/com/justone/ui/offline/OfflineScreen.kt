@@ -69,6 +69,12 @@ fun OfflineScreen(
                         CluePreparing(state.playersNumber, state.submittedClues)
                     }
                     DialogState.GUESS -> ClueShowing(dialogWidth, state.submittedClues, setDialogState)
+                    DialogState.RESULT -> ResultShowing(
+                        dialogWidth,
+                        state.keyword,
+                        state.isAnswerCorrect,
+                        setDialogState
+                    )
                 }
             }
         }
@@ -78,7 +84,6 @@ fun OfflineScreen(
         navHostController.popBackStack()
     }
 }
-
 
 @Composable
 private fun UiEffects(

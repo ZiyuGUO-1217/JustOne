@@ -4,5 +4,6 @@ enum class DialogState {
     HIDE,
     WORD,
     CLUE,
-    GUESS
+    GUESS,
+    RESULT
 }
