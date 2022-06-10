@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 sealed interface OfflineEvent {
     object ClueComplete : OfflineEvent
     object InvalidPlayerNumber : OfflineEvent
+    object CorrectAnswer : OfflineEvent
+    object WrongAnswer : OfflineEvent
 }
 
 @HiltViewModel
@@ -23,6 +25,7 @@ class JustOneOfflineViewModel @Inject constructor(
 ) : BaseViewModel<JustOneOfflineState, OfflineAction, OfflineEvent>() {
 
     init {
+        // todo use this method or let useCase send a flow
         viewModelScope.launch {
             useCase.wordList.collectLatest { wordList ->
                 updateState { copy(words = wordList) }
@@ -48,7 +51,7 @@ class JustOneOfflineViewModel @Inject constructor(
     override fun dispatch(action: OfflineAction) {
         when (action) {
             OfflineAction.GenerateWords -> {
-                cleanSubmittedClues()
+                setupGame()
                 if (useCase.isValidPlayerNumber(state.playersNumber)) {
                     getRandomWords()
                 } else {
@@ -65,9 +68,13 @@ class JustOneOfflineViewModel @Inject constructor(
         }
     }
 
-    private fun checkAnswer(guess: String) {
+    private fun setupGame() {
         updateState {
-            copy(isAnswerCorrect = useCase.checkAnswer(state.keyword, guess))
+            copy(
+                keyword = "",
+                submittedClues = emptyList(),
+                isAnswerCorrect = false
+            )
         }
     }
 
@@ -118,7 +125,14 @@ class JustOneOfflineViewModel @Inject constructor(
         }
     }
 
-    private fun cleanSubmittedClues() {
-        updateState { copy(submittedClues = emptyList()) }
+    private fun checkAnswer(guess: String) {
+        val isAnswerCorrect = useCase.checkAnswer(state.keyword, guess)
+
+        updateState { copy(isAnswerCorrect = isAnswerCorrect) }
+        if (isAnswerCorrect) {
+            sendEvent(OfflineEvent.CorrectAnswer)
+        } else {
+            sendEvent(OfflineEvent.WrongAnswer)
+        }
     }
 }

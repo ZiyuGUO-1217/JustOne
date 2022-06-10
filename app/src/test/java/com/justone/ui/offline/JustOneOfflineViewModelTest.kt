@@ -28,7 +28,7 @@ class JustOneOfflineViewModelTest {
     fun setUp() {
         every { mockSavedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_CLUE_TIMER) } returns 120
         every { mockSavedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_GUESS_TIMER) } returns 90
-        
+
         viewModel = JustOneOfflineViewModel(mockSavedStateHandle, mockUseCase)
     }
 
@@ -62,6 +62,36 @@ class JustOneOfflineViewModelTest {
 
             awaitItem() shouldBe OfflineEvent.InvalidPlayerNumber
             viewModel.flow.value.words shouldBe ResourceState.Empty
+        }
+    }
+
+    @Test
+    fun givenCorrectAnswer_whenCheckAnswer_thenShouldSendCorrectAnswerEvent() = runTest {
+        val keyword = "keyword"
+        val answer = keyword
+        every { mockUseCase.checkAnswer(keyword, answer) } returns true
+        viewModel.dispatch(OfflineAction.SelectKeyword(keyword))
+
+        viewModel.events.test {
+            viewModel.dispatch(OfflineAction.CheckAnswer(answer))
+
+            awaitItem() shouldBe OfflineEvent.CorrectAnswer
+            viewModel.flow.value.isAnswerCorrect shouldBe true
+        }
+    }
+
+    @Test
+    fun givenWrongAnswer_whenCheckAnswer_thenShouldSendWrongAnswerEvent() = runTest {
+        val keyword = "keyword"
+        val answer = "answer"
+        every { mockUseCase.checkAnswer(keyword, answer) } returns false
+        viewModel.dispatch(OfflineAction.SelectKeyword(keyword))
+
+        viewModel.events.test {
+            viewModel.dispatch(OfflineAction.CheckAnswer(answer))
+
+            awaitItem() shouldBe OfflineEvent.WrongAnswer
+            viewModel.flow.value.isAnswerCorrect shouldBe false
         }
     }
 }

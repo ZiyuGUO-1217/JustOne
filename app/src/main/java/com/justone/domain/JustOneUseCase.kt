@@ -54,5 +54,5 @@ class JustOneUseCase @Inject constructor(
 
     fun isValidPlayerNumber(playerNumber: Int) = playerNumber >= MINIMUM_PLAYER_NUMBER
 
-    fun checkAnswer(answer: String, guess: String) = ClueUtils.isSameClue(answer, guess)
+    fun checkAnswer(answer: String, guess: String) = ClueUtils.isSameClue(answer, guess) && guess.isNotBlank()
 }

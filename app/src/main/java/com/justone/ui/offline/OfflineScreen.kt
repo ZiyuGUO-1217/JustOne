@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.justone.foundation.network.ResourceState
-import com.justone.ui.widgets.CountDownTimer
+import com.justone.ui.widgets.CircleCountDownTimer
 import com.justone.ui.widgets.DialogContainer
 import kotlinx.coroutines.flow.collectLatest
 
@@ -62,19 +62,20 @@ fun OfflineScreen(
             DialogContainer(onClose) { dialogWidth ->
                 when (dialogState) {
                     DialogState.HIDE -> {}
-                    DialogState.WORD -> WordShowing(dialogWidth, clickedWord, state.translation, onClose, onConfirm)
+                    DialogState.WORD -> {
+                        WordShowing(dialogWidth, clickedWord, state.translation, onClose, onConfirm)
+                    }
                     DialogState.CLUE -> {
                         // no need to trigger the recomposition of CountDownTimer when state.submittedClues changed
-                        CountDownTimer(state.clueTimer, dialogWidth, onCountDownFinished)
+                        CircleCountDownTimer(state.clueTimer, dialogWidth, onCountDownFinished)
                         CluePreparing(state.playersNumber, state.submittedClues)
                     }
-                    DialogState.GUESS -> ClueShowing(dialogWidth, state.submittedClues, setDialogState)
-                    DialogState.RESULT -> ResultShowing(
-                        dialogWidth,
-                        state.keyword,
-                        state.isAnswerCorrect,
-                        setDialogState
-                    )
+                    DialogState.GUESS -> {
+                        ClueShowing(dialogWidth, state.submittedClues, state.guessTimer, setDialogState)
+                    }
+                    DialogState.RESULT -> {
+                        ResultShowing(dialogWidth, state.keyword, state.isAnswerCorrect, setDialogState)
+                    }
                 }
             }
         }
@@ -101,6 +102,11 @@ private fun UiEffects(
                 }
                 OfflineEvent.InvalidPlayerNumber -> {
                     scaffoldState.snackbarHostState.showSnackbar("Please add at least 2 player")
+                }
+                OfflineEvent.CorrectAnswer -> setDialogState(DialogState.RESULT)
+                OfflineEvent.WrongAnswer -> {
+                    // TODO add a alert
+                    scaffoldState.snackbarHostState.showSnackbar("Nope! Guess again :)")
                 }
             }
         }

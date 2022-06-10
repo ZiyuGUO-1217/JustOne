@@ -3,7 +3,6 @@ package com.justone.ui.widgets
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -11,10 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,9 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalHapticFeedback
 import com.justone.ui.theme.Green400
 import com.justone.ui.theme.Red400
 import com.justone.ui.theme.Yellow400
@@ -33,30 +27,21 @@ import com.justone.ui.theme.Yellow400
 private const val TIMER_ANGLE = 360f
 
 @Composable
-fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit = {}) {
-    val haptic = LocalHapticFeedback.current
+fun CircleCountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit = {}) {
     val unitWidth = timerWidth / (10 + 2).toFloat()
     val radius = (unitWidth * 8) / 2
     val canvasSize = with(LocalDensity.current) { timerWidth.toDp() }
 
     val animateArcFloat = remember { Animatable(1f) }
 
-    var countDownTimer by remember { mutableStateOf(timer) }
-    val leftTime by animateIntAsState(
-        targetValue = countDownTimer,
-        animationSpec = tween(durationMillis = timer * 1000, easing = LinearEasing),
-        finishedListener = {
-            onCountDownFinished()
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-        }
-    )
-
     Box(modifier = Modifier.size(canvasSize), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawBackgroundRing(radius, unitWidth)
             drawForegroundArc(animateArcFloat, radius, unitWidth)
         }
-        CountDownNumber(leftTime)
+        CountDownTimerContainer(timer = timer, onCountDownFinished = onCountDownFinished) { leftTime ->
+            CountDownNumber(leftTime)
+        }
     }
 
     LaunchedEffect(animateArcFloat) {
@@ -64,10 +49,6 @@ fun CountDownTimer(timer: Int, timerWidth: Int, onCountDownFinished: () -> Unit 
             targetValue = 0f,
             animationSpec = tween(durationMillis = timer * 1000, easing = LinearEasing)
         )
-    }
-
-    LaunchedEffect(countDownTimer) {
-        countDownTimer = 0
     }
 }
 

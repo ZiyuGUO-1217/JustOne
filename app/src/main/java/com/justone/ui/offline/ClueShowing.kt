@@ -20,17 +20,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.justone.ui.theme.Secondary
+import com.justone.ui.widgets.CountDownTimerContainer
 import com.justone.ui.widgets.FilledButton
 import com.justone.ui.widgets.TextInputField
 
 @Composable
-fun ClueShowing(dialogWidth: Int, clues: List<String>, setDialogState: (DialogState) -> Unit) {
+fun ClueShowing(dialogWidth: Int, clues: List<String>, guessTimer: Int, setDialogState: (DialogState) -> Unit) {
     val actor = LocalJustOneActor.current
     var inputAnswer by remember { mutableStateOf("") }
-    val onSubmit: (String) -> Unit = {
-        setDialogState(DialogState.RESULT)
-        actor(OfflineAction.CheckAnswer(it))
-    }
+    val onSubmit: (String) -> Unit = { actor(OfflineAction.CheckAnswer(it)) }
+    val finishedListener = { setDialogState(DialogState.RESULT) }
 
     val size = with(LocalDensity.current) { dialogWidth.toDp() }
     Column(
@@ -42,6 +41,11 @@ fun ClueShowing(dialogWidth: Int, clues: List<String>, setDialogState: (DialogSt
             Text(text = clue, fontSize = 56.sp, color = Secondary)
         }
     }
+
+    CountDownTimerContainer(timer = guessTimer, onCountDownFinished = finishedListener) {
+        Text(text = "Left time: $it")
+    }
+
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp)
