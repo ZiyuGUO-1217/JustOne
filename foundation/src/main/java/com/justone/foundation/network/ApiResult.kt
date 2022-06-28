@@ -1,9 +1,7 @@
 package com.justone.foundation.network
 
-import java.io.IOException
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
-import retrofit2.HttpException
 
 sealed class ApiResult<out T> {
     data class Success<T>(val data: T) : ApiResult<T>()
@@ -41,19 +39,4 @@ fun <T> ApiResult<T>.isError(): Boolean {
         returns(true) implies (this@isError is ApiResult.Error)
     }
     return this is ApiResult.Error
-}
-
-inline fun <T> callApi(block: () -> ApiResult<T>): ApiResult<T> {
-    return try {
-        block()
-    } catch (e: Throwable) {
-        when (e) {
-            is IOException -> ApiResult.Error(ErrorType.NetworkError)
-            is HttpException -> {
-                println("callApi:" + "${e.message}")
-                ApiResult.Error(ErrorType.ServerError)
-            }
-            else -> ApiResult.Error(ErrorType.ServerError)
-        }
-    }
 }

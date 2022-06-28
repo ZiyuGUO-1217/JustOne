@@ -1,6 +1,5 @@
-package com.justone.justone.domain.utils
+package com.justone.domain.utils
 
-import com.justone.domain.utils.ClueUtils
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 

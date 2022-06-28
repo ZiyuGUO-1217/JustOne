@@ -15,6 +15,12 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.justone.foundation.network.ResourceState
+import com.justone.ui.offline.components.CluePreparing
+import com.justone.ui.offline.components.ClueShowing
+import com.justone.ui.offline.components.DialogState
+import com.justone.ui.offline.components.ResultShowing
+import com.justone.ui.offline.components.WordShowing
+import com.justone.ui.offline.components.WordsScreen
 import com.justone.ui.widgets.CircleCountDownTimer
 import com.justone.ui.widgets.DialogContainer
 import kotlinx.coroutines.flow.collectLatest

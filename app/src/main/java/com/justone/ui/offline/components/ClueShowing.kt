@@ -1,4 +1,4 @@
-package com.justone.ui.offline
+package com.justone.ui.offline.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.justone.ui.offline.LocalJustOneActor
+import com.justone.ui.offline.OfflineAction
 import com.justone.ui.theme.Secondary
 import com.justone.ui.widgets.CountDownTimerContainer
 import com.justone.ui.widgets.FilledButton

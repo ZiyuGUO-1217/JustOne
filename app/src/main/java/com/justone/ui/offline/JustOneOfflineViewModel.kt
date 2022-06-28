@@ -2,13 +2,19 @@ package com.justone.ui.offline
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.justone.domain.JustOneUseCase
+import com.justone.domain.usecases.CheckAnswerUseCase
+import com.justone.domain.usecases.CheckPlayerNumberUseCase
+import com.justone.domain.usecases.DeduplicateClueUseCase
+import com.justone.domain.usecases.GenerateWordsUseCase
+import com.justone.domain.usecases.TimerUseCase
+import com.justone.domain.usecases.TranslateWordUseCase
 import com.justone.foundation.BaseViewModel
 import com.justone.foundation.network.ResourceState
+import com.justone.foundation.network.onError
+import com.justone.foundation.network.onSuccess
 import com.justone.ui.JustOneScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 sealed interface OfflineEvent {
@@ -21,30 +27,20 @@ sealed interface OfflineEvent {
 @HiltViewModel
 class JustOneOfflineViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val useCase: JustOneUseCase
+    private val generateWords: GenerateWordsUseCase,
+    private val translateWord: TranslateWordUseCase,
+    private val deduplicateClue: DeduplicateClueUseCase,
+    private val checkPlayerNumber: CheckPlayerNumberUseCase,
+    private val checkAnswer: CheckAnswerUseCase,
 ) : BaseViewModel<JustOneOfflineState, OfflineAction, OfflineEvent>() {
-
-    init {
-        // todo use this method or let useCase send a flow
-        viewModelScope.launch {
-            useCase.wordList.collectLatest { wordList ->
-                updateState { copy(words = wordList) }
-            }
-        }
-        viewModelScope.launch {
-            useCase.translation.collectLatest { translation ->
-                updateState { copy(translation = translation) }
-            }
-        }
-    }
 
     override fun configureInitState(): JustOneOfflineState {
         val clueTimer = savedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_CLUE_TIMER)
         val guessTimer = savedStateHandle.get<Int>(JustOneScreenRoute.Offline.KEY_GUESS_TIMER)
         return JustOneOfflineState(
-            wordsNumber = JustOneUseCase.WORDS_NUMBER,
-            clueTimer = clueTimer ?: JustOneUseCase.DEFAULT_CLUE_TIMER,
-            guessTimer = guessTimer ?: JustOneUseCase.DEFAULT_GUESS_TIMER
+            wordsNumber = GenerateWordsUseCase.WORDS_NUMBER,
+            clueTimer = clueTimer ?: TimerUseCase.DEFAULT_CLUE_TIMER,
+            guessTimer = guessTimer ?: TimerUseCase.DEFAULT_GUESS_TIMER
         )
     }
 
@@ -52,7 +48,7 @@ class JustOneOfflineViewModel @Inject constructor(
         when (action) {
             OfflineAction.GenerateWords -> {
                 setupGame()
-                if (useCase.isValidPlayerNumber(state.playersNumber)) {
+                if (checkPlayerNumber(state.playersNumber)) {
                     getRandomWords()
                 } else {
                     sendEvent(OfflineEvent.InvalidPlayerNumber)
@@ -79,14 +75,28 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     private fun getRandomWords() {
+        updateState { copy(words = ResourceState.Loading) }
         viewModelScope.launch {
-            useCase.getRandomWords()
+            generateWords(Unit)
+                .onSuccess { words ->
+                    updateState { copy(words = ResourceState.Success(words)) }
+                }
+                .onError { error ->
+                    updateState { copy(words = ResourceState.Error(error)) }
+                }
         }
     }
 
     private fun translateWord(word: String) {
+        updateState { copy(translation = ResourceState.Loading) }
         viewModelScope.launch {
-            useCase.translateWord(word)
+            translateWord(parameters = word)
+                .onSuccess { translation ->
+                    updateState { copy(translation = ResourceState.Success(translation)) }
+                }
+                .onError { error ->
+                    updateState { copy(translation = ResourceState.Error(error)) }
+                }
         }
     }
 
@@ -108,8 +118,9 @@ class JustOneOfflineViewModel @Inject constructor(
     }
 
     private fun deduplicateClue() {
+        val validClues = deduplicateClue(state.submittedClues, state.keyword)
         updateState {
-            copy(submittedClues = useCase.deduplicateClue(state.submittedClues, state.keyword))
+            copy(submittedClues = validClues)
         }
     }
 
@@ -120,13 +131,13 @@ class JustOneOfflineViewModel @Inject constructor(
 
     private fun removePlayer() {
         val updatePlayerNumber = state.playersNumber - 1
-        if (useCase.isValidPlayerNumber(updatePlayerNumber)) {
+        if (checkPlayerNumber(updatePlayerNumber)) {
             updateState { copy(playersNumber = updatePlayerNumber) }
         }
     }
 
     private fun checkAnswer(guess: String) {
-        val isAnswerCorrect = useCase.checkAnswer(state.keyword, guess)
+        val isAnswerCorrect = checkAnswer(state.keyword, guess)
 
         updateState { copy(isAnswerCorrect = isAnswerCorrect) }
         if (isAnswerCorrect) {

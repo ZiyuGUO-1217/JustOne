@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 
-package com.justone.ui.offline
+package com.justone.ui.offline.components
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
@@ -38,6 +38,9 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 import com.justone.R
 import com.justone.foundation.network.ResourceState
+import com.justone.ui.offline.JustOneOfflineState
+import com.justone.ui.offline.LocalJustOneActor
+import com.justone.ui.offline.OfflineAction
 import com.justone.ui.theme.JustOneTheme
 import com.justone.ui.theme.Primary
 import com.justone.ui.theme.Secondary

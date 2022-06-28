@@ -1,4 +1,4 @@
-package com.justone.ui.offline
+package com.justone.ui.offline.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.justone.ui.offline.LocalJustOneActor
+import com.justone.ui.offline.OfflineAction
 import com.justone.ui.widgets.FilledButton
 import com.justone.ui.widgets.TextInputField
 

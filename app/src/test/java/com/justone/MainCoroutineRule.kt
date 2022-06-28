@@ -9,7 +9,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainCoroutineRule(
     private val dispatcher: TestDispatcher = StandardTestDispatcher()

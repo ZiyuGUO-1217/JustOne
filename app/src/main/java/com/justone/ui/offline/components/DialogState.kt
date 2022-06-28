@@ -1,4 +1,4 @@
-package com.justone.ui.offline
+package com.justone.ui.offline.components
 
 enum class DialogState {
     HIDE,

@@ -1,6 +1,6 @@
 package com.justone.ui.home
 
-import com.justone.domain.JustOneUseCase
+import com.justone.domain.usecases.TimerUseCase
 import com.justone.foundation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -24,8 +24,8 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeAction,
 
     override fun configureInitState(): HomeState {
         return HomeState(
-            clueTimer = JustOneUseCase.DEFAULT_CLUE_TIMER.toString(),
-            guessTimer = JustOneUseCase.DEFAULT_GUESS_TIMER.toString()
+            clueTimer = TimerUseCase.DEFAULT_CLUE_TIMER.toString(),
+            guessTimer = TimerUseCase.DEFAULT_GUESS_TIMER.toString()
         )
     }
 

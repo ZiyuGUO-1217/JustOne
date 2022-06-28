@@ -1,4 +1,4 @@
-package com.justone.ui.online
+package com.justone.ui.online.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.justone.ui.online.LocalOnlineActor
+import com.justone.ui.online.OnlineAction
 import com.justone.ui.widgets.DialogContainer
 import com.justone.ui.widgets.FilledButton
 import com.justone.ui.widgets.TextInputField
