@@ -1,0 +1,9 @@
+apply plugin: 'jacoco'
+android {
+    buildTypes {
+        debug {
+            /**打开覆盖率统计开关**/
+            testCoverageEnabled = true
+        }
+    }
+}

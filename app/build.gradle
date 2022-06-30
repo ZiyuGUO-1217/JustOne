@@ -6,6 +6,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlinx-serialization'
 }
+apply from: 'jacoco.gradle'
 
 android {
     compileSdk 31
