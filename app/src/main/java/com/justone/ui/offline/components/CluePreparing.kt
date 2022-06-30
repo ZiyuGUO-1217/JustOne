@@ -41,7 +41,7 @@ fun CluePreparing(
             inputClue = it.replace('\n', ' ')
         }
         Spacer(modifier = Modifier.width(8.dp))
-        FilledButton(text = "Submit") {
+        FilledButton(text = "Submit", isEnable = inputClue.isNotBlank()) {
             onSubmit(inputClue)
             inputClue = ""
         }
