@@ -28,7 +28,7 @@ fun SetupDialog(onClose: () -> Unit) {
         actor(OnlineAction.SetupOnlineGame(roomId, playerId))
     }
 
-    DialogContainer(onClose) {
+    DialogContainer(onClose, false) {
         Row(
             modifier = Modifier
                 .padding(horizontal = 32.dp)

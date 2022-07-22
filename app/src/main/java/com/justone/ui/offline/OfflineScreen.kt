@@ -65,7 +65,7 @@ fun OfflineScreen(
         WordsScreen(state, scaffoldState, onGenerateClick, onWordClick)
 
         if (dialogState != DialogState.HIDE) {
-            DialogContainer(onClose) { dialogWidth ->
+            DialogContainer(onClose, false) { dialogWidth ->
                 when (dialogState) {
                     DialogState.HIDE -> {}
                     DialogState.WORD -> {

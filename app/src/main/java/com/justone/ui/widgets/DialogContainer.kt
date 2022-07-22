@@ -26,6 +26,7 @@ private const val DIALOG_FRACTION = 0.82f
 @Composable
 fun DialogContainer(
     onClose: () -> Unit = {},
+    dismissOnBackPress: Boolean = true,
     content: @Composable ColumnScope.(Int) -> Unit
 ) {
     var dialogWidth by remember { mutableStateOf(0) }
@@ -33,7 +34,7 @@ fun DialogContainer(
     Dialog(
         onDismissRequest = { onClose() },
         properties = DialogProperties(
-            dismissOnBackPress = true,
+            dismissOnBackPress = dismissOnBackPress,
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false
         )

@@ -23,10 +23,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.justone.ui.JustOneScreenRoute
 import com.justone.ui.widgets.FilledButton
 import com.justone.ui.widgets.TextInputFieldWithErrorMessage
@@ -41,8 +43,17 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 
     UiEffects(viewModel, navHostController, scaffoldState)
 
-    val clueTimer = remember{ mutableStateOf(state.clueTimer)}
-    val guessTimer = remember{ mutableStateOf(state.guessTimer)}
+    HomeScreenContent(state, scaffoldState, actor)
+}
+
+@Composable
+private fun HomeScreenContent(
+    state: HomeState,
+    scaffoldState: ScaffoldState,
+    actor: (HomeAction) -> Unit
+) {
+    val clueTimer = remember { mutableStateOf(state.clueTimer) }
+    val guessTimer = remember { mutableStateOf(state.guessTimer) }
 
     Scaffold(modifier = Modifier.fillMaxSize(), scaffoldState = scaffoldState) { paddingValues ->
         Box(
@@ -55,7 +66,7 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
             val isValidGuessTimer = isValidTimer(guessTimer.value)
             val isStartButtonsEnable = isValidClueTimer && isValidGuessTimer
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TimerInputField(clueTimer,isValidClueTimer, guessTimer, isValidGuessTimer, actor)
+                TimerInputField(clueTimer, isValidClueTimer, guessTimer, isValidGuessTimer, actor)
                 Spacer(modifier = Modifier.height(48.dp))
                 GameStartButtons(isStartButtonsEnable, actor)
             }
@@ -141,4 +152,11 @@ private fun UiEffects(viewModel: HomeViewModel, navHostController: NavHostContro
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    val navHostController = rememberNavController()
+    HomeScreen(navHostController = navHostController)
 }
